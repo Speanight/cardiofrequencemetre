@@ -1,3 +1,3 @@
-#include "define.h"
+#include "../define.h"
 
 absorp firTest(char* filename);

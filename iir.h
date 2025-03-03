@@ -1,4 +1,4 @@
-#include "define.h"
+#include "../define.h"
 
 
 absorp iirTest(char* filename);
