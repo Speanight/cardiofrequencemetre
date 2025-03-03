@@ -1,23 +1,23 @@
-IDIR=.
+IDIR =.
 CC=gcc
 CFLAGS=-I$(IDIR)
 
 ODIR=obj
-LDIR=.
+LDIR =.
 
 LIBS=-lm
 
-_DEPS = affichage.h
+_DEPS = define.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = affichage.o
+_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-hellomake: $(OBJ)
+cardiofrequencemetre: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

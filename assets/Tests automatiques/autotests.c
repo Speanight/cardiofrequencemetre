@@ -1,11 +1,11 @@
 
-#include "../../src/define.h"
-#include "../../src/fichiers/fichiers.h"
+#include "../../define.h"
+#include "../../fichiers.h"
 #include "autotests.h"
-#include "../../src/affichage/affichage.h"
-#include "../../src/filter/iir.h"
-#include "../../src/filter/fir.h"
-#include "../../src/mesure/mesure.h"
+#include "../../affichage.h"
+#include "../../iir.h"
+#include "../../fir.h"
+#include "../../mesure.h"
 #include <stdio.h>
 
 #define FIR_TEST_COUNT 4
