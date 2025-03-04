@@ -10,7 +10,7 @@ LIBS=-lm
 _DEPS = define.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main.o
+_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main_sim.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
@@ -21,6 +21,10 @@ cardiofrequencemetre: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
+.PHONY: run
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+
+run: cardiofrequencemetre
+	./cardiofrequencemetre
