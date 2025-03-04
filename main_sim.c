@@ -141,7 +141,6 @@ void print_buffer(circular_buffer* cb) {
 int main() {
     printf("Conteeeeeent\n");
 
-    printf("test Buffer\n");
     char* filename = "assets/FichiersLog/log1/log1.dat";
 
     circular_buffer* cb_origine = generate_circular_buffer(50);
@@ -151,9 +150,7 @@ int main() {
     absorp* currentIir = NULL;
     absorp* lastIir = NULL;
 
-
-
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 5000; i++){
         absorp *data = generate_absorp(filename, i);
         add_to_circular_buffer(cb_origine, data);
         currentFir = fir(cb_origine);
@@ -162,16 +159,15 @@ int main() {
 
         /* Envoi des données */
 
-//        print_absorp(currentFir);
-
-        free(lastIir);
-        free(lastFir);
+//        free(lastIir);
+//        free(lastFir);
         lastIir = currentIir;
         lastFir = currentFir;
+
     }
 
 
-    iirTest("assets/FichiersLog/log1/log1_fir.dat");
+//    iirTest("assets/FichiersLog/log2/log2_fir.dat");
 
     return 0;
 }

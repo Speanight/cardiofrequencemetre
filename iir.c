@@ -84,22 +84,25 @@ absorp* iir(absorp* lastIir, absorp* currentFir, absorp* lastFir){
     float alpha = 0.992;
 
     absorp* currentIir = malloc(sizeof(absorp));
-    if(lastFir == NULL){
-      return NULL;
+	if(lastFir!=NULL){
+		if(lastIir!=NULL){
+			currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
+			currentIir->dcr = currentFir->dcr;
+			currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
+			currentIir->dcir = currentFir->dcir;
+		}
+		else{
+			currentIir->acr = currentFir->acr - lastFir->acr;
+			currentIir->dcr = currentFir->dcr;
+			currentIir->acir = currentFir->acir - lastFir->acir;
+			currentIir->dcir = currentFir->dcir;
+		}
+
 	}
-
-    if (lastIir == NULL){
-      lastIir = malloc(sizeof(absorp));
-    	lastIir->acr = 0;
-        lastIir->dcr = 0;
-    	lastIir->acir = 0;
-    	lastIir->dcir = 0;
-    }
-
-    currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
-    currentIir->dcr = currentFir->dcr;
-	currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
-	currentIir->dcir = currentFir->dcir;
+    else{
+          currentIir = currentFir;
+	}
+    print_absorp(currentIir);
 
     return currentIir;
 }
