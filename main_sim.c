@@ -5,6 +5,7 @@
 #include "define.h"
 #include "affichage.h"
 #include "fir.h"
+#include "iir.h"
 
 absorp* generate_absorp(const char *filename, int n) {
   /*
@@ -138,27 +139,32 @@ void print_buffer(circular_buffer* cb) {
 
 int main() {
     printf("Conteeeeeent\n");
-    
-    printf("test Buffer\n");
-    circular_buffer *cb = generate_circular_buffer(10);
-    for(int i = 0; i < 10; i++){
-        absorp *data = generate_absorp("assets/FichiersLog/log1/log1.dat", i);
-        add_to_circular_buffer(cb, data);
 
+    printf("test Buffer\n");
+    char* filename = "assets/FichiersLog/log1/log1.dat";
+
+    circular_buffer* cb_origine = generate_circular_buffer(50);
+    absorp* currentFir = NULL;
+    absorp* lastFir= NULL;
+
+    absorp* currentIir = NULL;
+    absorp* lastIir = NULL;
+
+    for(int i = 0; i < 100; i++){
+        absorp *data = generate_absorp(filename, i);
+        add_to_circular_buffer(cb_origine, data);
+        currentFir = fir(cb_origine);
+        currentIir = iir(lastIir, currentFir, lastFir);
+        /* Calcuuuuuuuls */
+
+        /* Envoi des données */
+
+
+        absorp* lastIir = currentIir;
+        absorp* lastFir = currentFir;
     }
 
-
-
-
-
-
-
-
-
-
-
-    absorp myAbsorp = firTest("assets/FichiersLog/log1/log1.dat");
-    print_absorp(&myAbsorp);
+    iirTest("assets/FichiersLog/log1/log1_fir.dat");
 
     return 0;
 }

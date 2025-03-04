@@ -1,14 +1,72 @@
 #include "iir.h"
 #include "define.h"
+#include <stdlib.h>
 
 absorp iirTest(char* filename){
+  /*
+	Objectif :
+		+> faire le iir test pour toutes les valeur et revoyer la dernière enregistrée
+	Entrée :
+		+> le filename "log1_fir.dat" avec les données de sorties du filtre fir
+	SSortie :
+		+> on affiche tous les résultats du filtre
+		+> on return le dernier résultat obtenu
+   */
 	absorp	myAbsorp;
-	
+
+	FILE *file = fopen(filename, "r");
+	if (!file) {
+		printf("Erreur ouverture fichier (firTest)\n");
+		return myAbsorp;
+	}
+
+    printf("============== TEST IIR =============\n");
+
+	absorp* currentFir;
+	absorp* lastFir;
+
+    absorp* currentIir;
+    absorp* lastIir;
+
+	char fBuffer[256];
+	float alpha = 0.992;
+
+    int counter = 0;
+
+	while (fgets(fBuffer, sizeof(fBuffer), file)) {
+        sscanf(fBuffer, "%f,%f,%f,%f", &currentFir->acr, &currentFir->dcr, &currentFir->acir, &currentFir->dcir);
+		/*
+        printf("%d => %s",counter, fBuffer);
+        counter++;
+        */
+
+          if(lastFir!=NULL){
+          	currentIir->acr = currentFir->acr - lastFir->acr;
+          	currentIir->dcr = currentFir->dcr;
+          	currentIir->acir = currentFir->acir - lastFir->acir;
+          	currentIir->dcir = currentFir->dcir;
+          }
+          else{
+          	currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
+          	currentIir->dcr = currentFir->dcr;
+          	currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
+          	currentIir->dcir = currentFir->dcir;
+          }
+
+          print_absorp(currentIir);
+
+          lastIir = currentIir;
+          lastFir = currentFir;
+
+	}
+    myAbsorp = *currentIir;
+
+    fclose(file);
 	return myAbsorp;
 
 }
 
-absorp iir(circular_buffer* cb_fir, circular_buffer* cb_iir){
+absorp* iir(absorp* lastIir, absorp* currentFir, absorp* lastFir){
 	/*
 	Objectif :
 		+> filtrer par iir les données de sorties enregistrées dans le cb_fir
@@ -20,21 +78,25 @@ absorp iir(circular_buffer* cb_fir, circular_buffer* cb_iir){
 		+> mise a jour du circular buffer cb_cir avec les valeurs actuels
 	 */
 
-	absorp* currentFirAbsorp = read_from_circular_buffer(cb_fir,0);
-	absorp* lastFirAbsorp = read_from_circular_buffer(cb_fir,1);
-
-	absorp* currentIirAbsorp;
-	absorp* lastIirAbsorp = read_from_circular_buffer(cb_iir,0);
-
     float alpha = 0.992;
 
-    currentIirAbsorp->acr = currentFirAbsorp->acr - lastFirAbsorp->acr + alpha * lastIirAbsorp->acr;
-    currentIirAbsorp->dcr = currentFirAbsorp->dcr;
-	currentIirAbsorp->acir = currentFirAbsorp->acir - lastFirAbsorp->acir + alpha * lastIirAbsorp->acir;
-	currentIirAbsorp->dcir = currentFirAbsorp->dcir;
+    absorp* currentIir;
+    if(lastFir == NULL){
+      return NULL;
+	}
 
-    add_to_circular_buffer(cb_iir,currentIirAbsorp);
+    if (lastIir == NULL){
+    	lastIir->acr = 0;
+        lastIir->dcr = 0;
+    	lastIir->acir = 0;
+    	lastIir->dcir = 0;
+    }
 
-    return *currentIirAbsorp;
+    currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
+    currentIir->dcr = currentFir->dcr;
+	currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
+	currentIir->dcir = currentFir->dcir;
+
+    return currentIir;
 }
 
