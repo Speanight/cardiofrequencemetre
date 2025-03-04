@@ -4,6 +4,7 @@
 
 #include "define.h"
 #include "affichage.h"
+#include "fir.h"
 
 absorp* generate_absorp(const char *filename, int n) {
   /*
@@ -155,6 +156,9 @@ int main() {
 
 
 
+
+    absorp myAbsorp = firTest("assets/FichiersLog/log1/log1.dat");
+    print_absorp(&myAbsorp);
 
     return 0;
 }
