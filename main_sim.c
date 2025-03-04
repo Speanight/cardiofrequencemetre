@@ -19,7 +19,7 @@ absorp* generate_absorp(const char *filename, int n) {
     }
 
     /* Allocation de la mémoire pour la structure */
-    absorp *data = (absorp*)malloc(sizeof(absorp));
+    absorp *data;
     if (!data) {
         printf("Erreur allocation mémoire");
         fclose(file);
@@ -71,7 +71,7 @@ circular_buffer* generate_circular_buffer(int size){
         +> crée un buffer de ka bonne taille et initialise le début a 0
         +> NULL si erreur
 */
-    circular_buffer *buffer = (circular_buffer*)malloc(sizeof(circular_buffer));
+    circular_buffer *buffer;
     if (!buffer) {
         printf("Erreur allocation mémoire");
         return NULL;
@@ -98,7 +98,12 @@ void add_to_circular_buffer(circular_buffer* cb, absorp* data){
   }
   cb->array[cb->current] = *data;
 }
-
+/*
+void init_circular_buffer(circular_buffer* cb){
+  for(int i = 0; i < cb->size; i++){
+    cb->array[i] = (absorp*)malloc(sizeof(absorp));
+}
+*/
 absorp* read_from_circular_buffer(circular_buffer* cb, int index){
   /*
     Objectif :
@@ -125,27 +130,32 @@ absorp* read_from_circular_buffer(circular_buffer* cb, int index){
 }
 
 void print_buffer(circular_buffer* cb){
+  /*
+    Objectif :
+        +> afficher le contenu du buffer
+    Entrée :
+        +> cb     => le Buffer
+    Sortie :
+        +> affichage ...
+   */
+  printf("affichage du buffer de size : %d\n",cb->size);
   for (int i = 0; i < cb->size; i++){
     printf("index =>%d  ", i);
     print_absorp(&(cb->array[i]));
-    printf("\n");
   }
 }
 
-
 int main() {
     printf("Conteeeeeent\n");
-    int ligne = 2; // Exemple : lire la ligne 2
-    absorp *data = generate_absorp("assets/Fichiers log/log1/log1.dat", ligne);
-
-    if (data) {
-        printf("Ligne %d ", ligne);
-        print_absorp(data);
-        free(data);
+    
+    printf("test Buffer\n");
+    circular_buffer *cb = generate_circular_buffer(10);
+    for(int i = 0; i < 15; i++){
+        absorp *data = generate_absorp("assets/Fichiers log/log1/log1.dat", i);
+        add_to_circular_buffer(cb, data);
     }
-    else {
-        printf("Erreur : impossible de générer la structure absorp\n");
-    }
+    print_buffer(cb);
+    free(cb->array);
 
     printf("Test de l'affichage :\n");
     oxy myOxy = {97, 104};
