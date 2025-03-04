@@ -41,6 +41,7 @@ absorp* generate_absorp(const char *filename, int n) {
     }
 
     fclose(file);
+    free(data);
     return NULL; // Ligne non trouvée
 }
 
@@ -89,10 +90,11 @@ void add_to_circular_buffer(circular_buffer* cb, absorp* data) {
     Sortie :
         +> ajout de data dans le cb
    */
-    if (cb->current == cb->size){
+    if (cb->current == cb->size) {
         cb->current = 0;
     }
     cb->array[cb->current] = *data;
+//    free(data);
     cb->current++;
 }
 
@@ -144,11 +146,14 @@ int main() {
     for(int i = 0; i < 10; i++){
         absorp *data = generate_absorp("assets/FichiersLog/log1/log1.dat", i);
         add_to_circular_buffer(cb, data);
-
+        free(data);
     }
 
     absorp myAbsorp = firTest("assets/FichiersLog/log1/log1.dat");
     print_absorp(&myAbsorp);
+
+    // Pour satisfaire valgrind et les fuites de mémoire :
+    free(cb);
 
     return 0;
 }

@@ -56,6 +56,7 @@ float FIR_TAPS[51]={
 
 
 // A faire sur acr et acir.
+// TODO: Trouver le leak de 8 bytes dans 1 block.
 absorp firTest(char* filename){
   /*
 	Filtre toutes les données du fichier associé et renvoie la dernière valeur filtrée
@@ -74,22 +75,25 @@ absorp firTest(char* filename){
     buffer->size = 50;
     buffer->current = 0;
 
+    absorp *data = malloc(sizeof(data));
     while (fgets(fBuffer, sizeof(fBuffer), file)) {
-        absorp *data = malloc(sizeof(data));
         sscanf(fBuffer, "%f,%f,%f,%f", &data->acr, &data->dcr, &data->acir, &data->dcir);
         buffer->array[buffer->current] = *data;
         buffer->current = (buffer->current+1)%buffer->size;
         current_line++;
 
-        myAbsorp = *fir(buffer);
+        // Pour satisfaire valgrind et les fuites de mémoire :
+        absorp* valAbsorp = fir(buffer);
+        myAbsorp = *valAbsorp;
         print_absorp(&myAbsorp);
-    }
-
-    if (current_line < buffer->size) {
-        return myAbsorp;
+        free(valAbsorp);
     }
 
     myAbsorp = *fir(buffer);
+
+    free(data);
+    free(buffer);
+    fclose(file);
 
 	return myAbsorp;
 }
