@@ -138,7 +138,7 @@ void print_buffer(circular_buffer* cb) {
 
 int main() {
     printf("Conteeeeeent\n");
-    
+
     printf("test Buffer\n");
     circular_buffer *cb = generate_circular_buffer(10);
     for(int i = 0; i < 10; i++){
@@ -146,16 +146,6 @@ int main() {
         add_to_circular_buffer(cb, data);
 
     }
-
-
-
-
-
-
-
-
-
-
 
     absorp myAbsorp = firTest("assets/FichiersLog/log1/log1.dat");
     print_absorp(&myAbsorp);

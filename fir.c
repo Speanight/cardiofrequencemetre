@@ -78,7 +78,15 @@ absorp firTest(char* filename){
         absorp *data = malloc(sizeof(data));
         sscanf(fBuffer, "%f,%f,%f,%f", &data->acr, &data->dcr, &data->acir, &data->dcir);
         buffer->array[buffer->current] = *data;
-        buffer->current++;
+        buffer->current = (buffer->current+1)%buffer->size;
+        current_line++;
+
+        myAbsorp = *fir(buffer);
+        print_absorp(&myAbsorp);
+    }
+
+    if (current_line < buffer->size) {
+        return myAbsorp;
     }
 
     myAbsorp = *fir(buffer);
@@ -93,17 +101,23 @@ absorp* fir(circular_buffer* buffer) {
 
   // Initialisation d'une valeur absorp.
   absorp* data = malloc(sizeof(data));
+  // On récupère le dernier élément...
+    int lastElem = buffer->current - 1;
+    if (lastElem == -1) { // Si c'était le premier, alors on prend le dernier.
+        lastElem = buffer->size - 1;
+    }
+
   data->acir = 0;
   data->acr = 0;
   // dcir et dcr n'étant pas modifiées, elles sont donc égales à la dernière valeur.
-  data->dcir = buffer->array[buffer->size - 1].dcir;
-  data->dcr = buffer->array[buffer->size - 1].dcr;
+  data->dcir = buffer->array[lastElem].dcir;
+  data->dcr = buffer->array[lastElem].dcr;
 
   // Boucle ("intégrale" du calcul)
   for (int i = 0; i < buffer->size; i++) {
       // Ajout de chacune des valeurs (via boucle for) à acir et acr.
-      data->acir += FIR_TAPS[i] * buffer->array[buffer->size - 1 - i].acir;
-      data->acr += FIR_TAPS[i] * buffer->array[buffer->size - 1 - i].acr;
+      data->acir += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acir;
+      data->acr += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acr;
   }
 
   return data;
