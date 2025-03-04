@@ -42,6 +42,7 @@ absorp* generate_absorp(const char *filename, int n) {
     }
 
     fclose(file);
+    free(data);
     return NULL; // Ligne non trouvée
 }
 

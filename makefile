@@ -22,9 +22,13 @@ cardiofrequencemetre: $(OBJ)
 
 .PHONY: clean
 .PHONY: run
+.PHONE: valgrind
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
 
 run: cardiofrequencemetre
 	./cardiofrequencemetre
+
+valgrind: cardiofrequencemetre
+	valgrind --leak-check=full --track-origins=yes ./cardiofrequencemetre
