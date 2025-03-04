@@ -25,7 +25,6 @@ absorp* generate_absorp(const char *filename, int n) {
         return NULL;
     }
 
-
     char buffer[256];
     int current_line = 0;
 
@@ -42,6 +41,69 @@ absorp* generate_absorp(const char *filename, int n) {
     fclose(file);
     free(data);
     return NULL; // Ligne non trouvée
+}
+
+circular_buffer* generate_circular_buffer(int size){
+  /*
+    Objectif :
+        +> créer un buffer
+    Entrée :
+        +> size  => le nombre d'éléments du buffer (maximum)
+    Sortie :
+        +> crée un buffer de ka bonne taille et initialise le début a 0
+        +> NULL si erreur
+*/
+    circular_buffer *buffer = (circular_buffer*)malloc(sizeof(circular_buffer));
+    if (!buffer) {
+        printf("Erreur allocation mémoire");
+        return NULL;
+    }
+
+    buffer->array = malloc(size * sizeof(absorp*));
+    buffer->size = size;
+    buffer->current = 0;
+    return buffer;
+}
+
+void add_to_circular_buffer(circular_buffer* cb, absorp* data){
+  /*
+    Objectif     +> ajouter dans le buffer une structure absorp
+    Entrée :
+        +> cb    => circular_buffer
+        +> data  => absorp
+    Sortie :
+        +> ajout de data dans le cb
+   */
+  cb->current++;
+  if (cb->current == cb->size){
+    cb->current = 0;
+  }
+  cb->array[cb->current] = data;
+}
+
+absorp* read_from_circular_buffer(circular_buffer* cb, int index){
+  /*
+    Objectif :
+        +> lire les données contenues dans le buffer grâce a un index
+        +> plus l'index est grand plus il vas chercher dans les données sauvegardé précédement
+    Entrée :
+        +> cb     => buffer contenant les structure
+        +> index  => index qui indique la "profondeur" de la recherche
+    Sortie :
+        +> absorp* => les datas voulues
+        +> NULL    => si erreur index
+   */
+  if (index >= cb->size-1){
+    printf("Erreur : index plus grand que la taille");
+    return NULL;
+  }
+
+  if(cb->current-index>0){
+    return cb->array[cb->current - index]
+  }
+  else {
+    return cb->array[cb->size + (cb->current - index)];
+  }
 }
 
 int main() {

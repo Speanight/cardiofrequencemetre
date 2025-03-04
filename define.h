@@ -24,8 +24,17 @@ typedef struct{
 
 absorp* generate_absorp(const char *filename, int n);
 
+typedef struct{
+      absorp* array;
+      int current;
+      int size;
+  } circular_buffer;
 
+circular_buffer* generate_circular_buffer(int size);
 
+void add_to_circular_buffer(circular_buffer* cb, int value);
+
+absorp* read_from_circular_buffer(circular_buffer* cb, int index);
 /*! ------------------------------------------------------------
   
   \struct oxy
