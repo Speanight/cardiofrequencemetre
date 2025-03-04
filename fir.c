@@ -59,8 +59,11 @@ absorp firTest(char* filename){
   /*
 	Filtre toutes les données du fichier associé et renvoie la dernière valeur filtrée
 	*/
-	absorp	myAbsorp;
-	
+	absorp myAbsorp;
+
+    FILE *data;
+    int current_line = 0;
+
 	return myAbsorp;
 
 }
@@ -70,3 +73,4 @@ absorp fir(absorp* input){
 	Transforme les données de la structure d'entrée (filtre)
    */
 }
+

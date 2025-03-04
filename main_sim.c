@@ -58,9 +58,5 @@ int main() {
         printf("Erreur : impossible de générer la structure absorp\n");
     }
 
-    printf("Test de l'affichage :\n");
-    oxy myOxy = {97, 104};
-    affichage(myOxy);
-
     return 0;
 }
