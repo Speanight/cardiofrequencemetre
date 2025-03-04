@@ -4,6 +4,7 @@
 
 #include "define.h"
 #include "affichage.h"
+#include "fir.h"
 
 absorp* generate_absorp(const char *filename, int n) {
   /*
@@ -13,8 +14,6 @@ absorp* generate_absorp(const char *filename, int n) {
    */
   /* Ouverture du fichier et gestion erreur s'il n'apparait pas*/
 
-  printf("Ouverture du fichier...");
-
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("Erreur ouverture fichier");
@@ -23,7 +22,7 @@ absorp* generate_absorp(const char *filename, int n) {
 
     printf("Allocation mémoire pour la structure...");
     /* Allocation de la mémoire pour la structure */
-    absorp *data = malloc(sizeof(data));
+    absorp *data = malloc(sizeof(absorp));
     if (!data) {
         printf("Erreur allocation mémoire");
         fclose(file);
@@ -146,11 +145,13 @@ int main() {
     printf("test Buffer\n");
     circular_buffer *cb = generate_circular_buffer(10);
     for(int i = 0; i < 10; i++){
-        printf("Loop #%d\n", i);
         absorp *data = generate_absorp("assets/FichiersLog/log1/log1.dat", i);
         add_to_circular_buffer(cb, data);
     }
     print_buffer(cb);
+
+    absorp myAbsorp = firTest("assets/FichiersLog/log1/log1.dat");
+    print_absorp(&myAbsorp);
 
     return 0;
 }
