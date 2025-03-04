@@ -3,6 +3,7 @@
 //
 
 #include "define.h"
+#include "affichage.h"
 
 absorp* generate_absorp(const char *filename, int n) {
   /*
@@ -143,6 +144,10 @@ int main() {
     } else {
         printf("Erreur : impossible de générer la structure absorp\n");
     }
+
+    printf("Test de l'affichage :\n");
+    oxy myOxy = {97, 104};
+    affichage(myOxy);
 
     return 0;
 }
