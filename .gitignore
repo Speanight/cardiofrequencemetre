@@ -1,1 +1,4 @@
-/obj/
+obj/
+/.idea/
+/cmake-build-debug/
+/cardiofrequencemetre
