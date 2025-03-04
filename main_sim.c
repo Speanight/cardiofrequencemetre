@@ -43,6 +43,23 @@ absorp* generate_absorp(const char *filename, int n) {
     return NULL; // Ligne non trouvée
 }
 
+void print_absorp(absorp *absorp) {
+  /*
+    Objectif :
+        +> afficher le absorp
+    Entrée :
+        +> absorp     =>un absorp
+    Sortie :
+        +> affichage du absorp
+   */
+    printf("Absorp :  acr = %.2f, dcr = %.2f, acir = %.2f, dcir = %.2f\n",
+        data->acr,
+        data->dcr,
+        data->acir,
+        data->dcir
+    );
+}
+
 circular_buffer* generate_circular_buffer(int size){
   /*
     Objectif :
@@ -105,6 +122,14 @@ absorp* read_from_circular_buffer(circular_buffer* cb, int index){
     return cb->array[cb->size + (cb->current - index)];
   }
 }
+
+void print_buffer(circular_buffer* cb){
+  for (int i = 0; i < cb->size; i++){
+    printf("index =>%d  ", i);
+    print_absorp(cb->array[i]);
+    printf("\n");
+}
+
 
 int main() {
     printf("Conteeeeeent\n");
