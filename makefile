@@ -21,6 +21,10 @@ cardiofrequencemetre: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
+.PHONY: run
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+
+run: cardiofrequencemetre
+	./cardiofrequencemetre
