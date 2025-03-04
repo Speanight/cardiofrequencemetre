@@ -12,14 +12,18 @@ absorp* generate_absorp(const char *filename, int n) {
     n            +> numéro de ligne
    */
   /* Ouverture du fichier et gestion erreur s'il n'apparait pas*/
+
+  printf("Ouverture du fichier...");
+
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("Erreur ouverture fichier");
         return NULL;
     }
 
+    printf("Allocation mémoire pour la structure...");
     /* Allocation de la mémoire pour la structure */
-    absorp *data;
+    absorp *data = malloc(sizeof(data));
     if (!data) {
         printf("Erreur allocation mémoire");
         fclose(file);
@@ -40,7 +44,6 @@ absorp* generate_absorp(const char *filename, int n) {
     }
 
     fclose(file);
-    free(data);
     return NULL; // Ligne non trouvée
 }
 
@@ -61,7 +64,7 @@ void print_absorp(absorp *absorp) {
     );
 }
 
-circular_buffer* generate_circular_buffer(int size){
+circular_buffer* generate_circular_buffer(int size) {
   /*
     Objectif :
         +> créer un buffer
@@ -71,19 +74,16 @@ circular_buffer* generate_circular_buffer(int size){
         +> crée un buffer de ka bonne taille et initialise le début a 0
         +> NULL si erreur
 */
-    circular_buffer *buffer;
-    if (!buffer) {
-        printf("Erreur allocation mémoire");
-        return NULL;
-    }
+//    circular_buffer buffer = {0, size};
+    circular_buffer* buffer = malloc(sizeof(circular_buffer));
 
-    buffer->array = malloc(size * sizeof(absorp*));
     buffer->size = size;
     buffer->current = 0;
+
     return buffer;
 }
 
-void add_to_circular_buffer(circular_buffer* cb, absorp* data){
+void add_to_circular_buffer(circular_buffer* cb, absorp* data) {
   /*
     Objectif     +> ajouter dans le buffer une structure absorp
     Entrée :
@@ -92,19 +92,14 @@ void add_to_circular_buffer(circular_buffer* cb, absorp* data){
     Sortie :
         +> ajout de data dans le cb
    */
-  cb->current++;
-  if (cb->current == cb->size){
-    cb->current = 0;
-  }
-  cb->array[cb->current] = *data;
+    if (cb->current == cb->size){
+        cb->current = 0;
+    }
+    cb->array[cb->current] = *data;
+    cb->current++;
 }
-/*
-void init_circular_buffer(circular_buffer* cb){
-  for(int i = 0; i < cb->size; i++){
-    cb->array[i] = (absorp*)malloc(sizeof(absorp));
-}
-*/
-absorp* read_from_circular_buffer(circular_buffer* cb, int index){
+
+absorp* read_from_circular_buffer(circular_buffer* cb, int index) {
   /*
     Objectif :
         +> lire les données contenues dans le buffer grâce a un index
@@ -129,7 +124,7 @@ absorp* read_from_circular_buffer(circular_buffer* cb, int index){
   }
 }
 
-void print_buffer(circular_buffer* cb){
+void print_buffer(circular_buffer* cb) {
   /*
     Objectif :
         +> afficher le contenu du buffer
@@ -150,12 +145,12 @@ int main() {
     
     printf("test Buffer\n");
     circular_buffer *cb = generate_circular_buffer(10);
-    for(int i = 0; i < 15; i++){
-        absorp *data = generate_absorp("assets/Fichiers log/log1/log1.dat", i);
+    for(int i = 0; i < 10; i++){
+        printf("Loop #%d\n", i);
+        absorp *data = generate_absorp("assets/FichiersLog/log1/log1.dat", i);
         add_to_circular_buffer(cb, data);
     }
     print_buffer(cb);
-    free(cb->array);
 
     return 0;
 }

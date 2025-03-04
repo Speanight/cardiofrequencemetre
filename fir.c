@@ -61,11 +61,21 @@ absorp firTest(char* filename){
 	*/
 	absorp myAbsorp;
 
-    FILE *data;
+    FILE *data = fopen(filename, "r");
+    if (!data) {
+        printf("Erreur ouverture fichier (firTest)\n");
+        return myAbsorp;
+    }
+
     int current_line = 0;
+    char buffer[256];
+    struct circular_buffer;
+
+//    while (fgets(buffer, sizeof(buffer), data)) {
+//        sscanf(buffer, "%f,%f,%f,%f", NULL, NULL, NULL, NULL);
+//    }
 
 	return myAbsorp;
-
 }
 
 absorp fir(absorp* input){

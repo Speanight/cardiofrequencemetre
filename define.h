@@ -29,11 +29,11 @@ void print_absorp(absorp *absorp);
 
 /* Circular Buffer */
 
-typedef struct{
-      absorp* array;
-      int current;
-      int size;
-  } circular_buffer;
+typedef struct {
+    int current;
+    int size;
+    absorp array[50];
+} circular_buffer;
 
 circular_buffer* generate_circular_buffer(int size);
 
