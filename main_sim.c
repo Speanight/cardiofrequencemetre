@@ -150,6 +150,8 @@ int main() {
     absorp* currentIir = NULL;
     absorp* lastIir = NULL;
 
+
+
     for(int i = 0; i < 100; i++){
         absorp *data = generate_absorp(filename, i);
         add_to_circular_buffer(cb_origine, data);
@@ -159,10 +161,14 @@ int main() {
 
         /* Envoi des données */
 
+//        print_absorp(currentFir);
 
-        absorp* lastIir = currentIir;
-        absorp* lastFir = currentFir;
+        free(lastIir);
+        free(lastFir);
+        lastIir = currentIir;
+        lastFir = currentFir;
     }
+
 
     iirTest("assets/FichiersLog/log1/log1_fir.dat");
 

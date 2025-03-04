@@ -34,31 +34,34 @@ absorp iirTest(char* filename){
     int counter = 0;
 
 	while (fgets(fBuffer, sizeof(fBuffer), file)) {
+        absorp* currentIir = malloc(sizeof(absorp));
+        absorp* currentFir = malloc(sizeof(absorp));
+
         sscanf(fBuffer, "%f,%f,%f,%f", &currentFir->acr, &currentFir->dcr, &currentFir->acir, &currentFir->dcir);
-		/*
-        printf("%d => %s",counter, fBuffer);
-        counter++;
-        */
 
-          if(lastFir!=NULL){
-          	currentIir->acr = currentFir->acr - lastFir->acr;
-          	currentIir->dcr = currentFir->dcr;
-          	currentIir->acir = currentFir->acir - lastFir->acir;
-          	currentIir->dcir = currentFir->dcir;
-          }
-          else{
-          	currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
-          	currentIir->dcr = currentFir->dcr;
-          	currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
-          	currentIir->dcir = currentFir->dcir;
-          }
+        if(lastFir!=NULL){
+            if(lastIir!=NULL){
+            	currentIir->acr = currentFir->acr - lastFir->acr + alpha * lastIir->acr;
+            	currentIir->dcr = currentFir->dcr;
+            	currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
+            	currentIir->dcir = currentFir->dcir;
+            }
+            else{
+            	currentIir->acr = currentFir->acr - lastFir->acr;
+            	currentIir->dcr = currentFir->dcr;
+            	currentIir->acir = currentFir->acir - lastFir->acir;
+            	currentIir->dcir = currentFir->dcir;
+			}
+          	print_absorp(currentIir);
+        }
 
-          print_absorp(currentIir);
-
-          lastIir = currentIir;
-          lastFir = currentFir;
-
+        free(lastIir);
+        lastIir = currentIir;
+        //TODO: le truc en dessous, faire un freeeeeeee
+//        free(lastFir);
+        lastFir = currentFir;
 	}
+	free(lastIir);
     myAbsorp = *currentIir;
 
     fclose(file);
@@ -80,12 +83,13 @@ absorp* iir(absorp* lastIir, absorp* currentFir, absorp* lastFir){
 
     float alpha = 0.992;
 
-    absorp* currentIir;
+    absorp* currentIir = malloc(sizeof(absorp));
     if(lastFir == NULL){
       return NULL;
 	}
 
     if (lastIir == NULL){
+      lastIir = malloc(sizeof(absorp));
     	lastIir->acr = 0;
         lastIir->dcr = 0;
     	lastIir->acir = 0;
