@@ -34,7 +34,7 @@ typedef struct{
 
 circular_buffer* generate_circular_buffer(int size);
 
-void add_to_circular_buffer(circular_buffer* cb, int value);
+void add_to_circular_buffer(circular_buffer* cb, absorp* data);
 
 absorp* read_from_circular_buffer(circular_buffer* cb, int index);
 

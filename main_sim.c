@@ -54,10 +54,10 @@ void print_absorp(absorp *absorp) {
         +> affichage du absorp
    */
     printf("Absorp :  acr = %.2f, dcr = %.2f, acir = %.2f, dcir = %.2f\n",
-        data->acr,
-        data->dcr,
-        data->acir,
-        data->dcir
+        absorp->acr,
+        absorp->dcr,
+        absorp->acir,
+        absorp->dcir
     );
 }
 
@@ -96,7 +96,7 @@ void add_to_circular_buffer(circular_buffer* cb, absorp* data){
   if (cb->current == cb->size){
     cb->current = 0;
   }
-  cb->array[cb->current] = data;
+  cb->array[cb->current] = *data;
 }
 
 absorp* read_from_circular_buffer(circular_buffer* cb, int index){
@@ -117,18 +117,19 @@ absorp* read_from_circular_buffer(circular_buffer* cb, int index){
   }
 
   if(cb->current-index>0){
-    return cb->array[cb->current - index]
+    return &(cb->array[cb->current - index]);
   }
   else {
-    return cb->array[cb->size + (cb->current - index)];
+    return &(cb->array[cb->size + (cb->current - index)]);
   }
 }
 
 void print_buffer(circular_buffer* cb){
   for (int i = 0; i < cb->size; i++){
     printf("index =>%d  ", i);
-    print_absorp(cb->array[i]);
+    print_absorp(&(cb->array[i]));
     printf("\n");
+  }
 }
 
 
@@ -138,10 +139,11 @@ int main() {
     absorp *data = generate_absorp("assets/Fichiers log/log1/log1.dat", ligne);
 
     if (data) {
-        printf("Ligne %d : acr = %.2f, dcr = %.2f, acir = %.2f, dcir = %.2f\n",
-               ligne, data->acr, data->dcr, data->acir, data->dcir);
+        printf("Ligne %d ", ligne);
+        print_absorp(data);
         free(data);
-    } else {
+    }
+    else {
         printf("Erreur : impossible de générer la structure absorp\n");
     }
 
