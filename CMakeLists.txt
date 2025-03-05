@@ -4,11 +4,11 @@ project(cardiofrequencemetre C)
 set(CMAKE_C_STANDARD 11)
 
 include_directories(.)
-include_directories("assets/Tests automatiques")
+include_directories("assets/TestsAutomatiques")
 
 add_executable(cardiofrequencemetre
-        "assets/Tests automatiques/autotests.c"
-        "assets/Tests automatiques/autotests.h"
+        "assets/TestsAutomatiques/autotests.c"
+        "assets/TestsAutomatiques/autotests.h"
         affichage.c
         affichage.h
         define.h

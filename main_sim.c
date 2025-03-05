@@ -171,7 +171,7 @@ int main() {
     }
 
 
-    iirTest("assets/FichiersLog/log1/log1_fir.dat");
+    firTest("assets/FichiersLog/log1/log1.dat");
 
     return 0;
 }

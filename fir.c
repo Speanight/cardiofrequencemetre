@@ -82,10 +82,10 @@ absorp firTest(char* filename){
         buffer->current = (buffer->current+1)%buffer->size;
         current_line++;
 
-        // Pour satisfaire valgrind et les fuites de mémoire :
         absorp* valAbsorp = fir(buffer);
         myAbsorp = *valAbsorp;
         print_absorp(&myAbsorp);
+        // Pour satisfaire valgrind et les fuites de mémoire :
         free(valAbsorp);
     }
 
