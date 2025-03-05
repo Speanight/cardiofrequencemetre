@@ -1,7 +1,7 @@
 #ifndef OXY_AUTOTEST_H
 #define OXY_AUTOTEST_H
 
-#include "../../define.h"
+#include "define.h"
 
 
 void printAutoTestsResults(char* testName, float mark[], int coeff[], int nTests);

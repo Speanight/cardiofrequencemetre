@@ -85,7 +85,7 @@ absorp firTest(char* filename){
 
         absorp* valAbsorp = fir(buffer);
         myAbsorp = *valAbsorp;
-        print_absorp(&myAbsorp);
+//        print_absorp(&myAbsorp);
         // Pour satisfaire valgrind et les fuites de mémoire :
         free(valAbsorp);
     }

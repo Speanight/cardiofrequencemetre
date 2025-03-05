@@ -1,5 +1,6 @@
 #include "mesure.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 
 int maj_onde(onde* onde, absorp* currentIir, absorp* lastIir){
@@ -112,5 +113,45 @@ int calcul_SPO2(float ratio){
 oxy mesureTest(char* filename){
 	oxy myOxy;
 
+	FILE *file = fopen(filename, "r");
+	if (!file) {
+		printf("Erreur ouverture fichier (firTest)\n");
+		return myOxy;
+	}
+
+	char fBuffer[256];
+
+	absorp* lastIir = NULL;
+
+	onde* onde = malloc(sizeof(onde));
+	oxy* tempOxy = malloc(sizeof(oxy));
+
+    bool first_turn = true;
+
+	while (fgets(fBuffer, sizeof(fBuffer), file)) {
+		absorp* currentIir = malloc(sizeof(absorp));
+		if(first_turn){
+          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
+
+            onde->time = 0;
+            onde->Xmax = currentIir;
+            onde->Xmin = currentIir;
+            first_turn = false;
+        }
+        else {
+          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
+
+          	if (maj_onde(onde, currentIir, lastIir) == 1) {
+				calculs(onde, tempOxy);
+				// Remise à zéro.
+          		onde->time = 0;
+          		onde->Xmin = currentIir;
+          		onde->Xmax = currentIir;
+          	}
+		}
+        lastIir = currentIir;
+
+    }
+	myOxy = *tempOxy;
 	return myOxy;
 }

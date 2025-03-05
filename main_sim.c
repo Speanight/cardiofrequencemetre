@@ -11,72 +11,67 @@
 #include "fir.h"
 #include "iir.h"
 #include "mesure.h"
-
+#include "autotests.h"
 
 int main() {
-    char* filename = "assets/FichiersLog/log1/log1.dat";
+     //Initialisation fichier source
+     char* filename = "assets/FichiersLog/log1/log1.dat";
 
-    // Initialisation Extraction
-    circular_buffer* cb_origine = generate_circular_buffer(50);
+     //Initialisation Extraction
+     char fBuffer[256];
+     int ligne = 0;
+     circular_buffer* cb_origine = generate_circular_buffer(50);
 
-    // Initialisation Filtrage
-    absorp* currentFir = NULL;
-    absorp* lastFir= NULL;
+     // Initialisation Filtrage
+     absorp* currentFir = NULL;
+     absorp* lastFir= NULL;
 
-    absorp* currentIir = NULL;
-    absorp* lastIir = NULL;
+     absorp* currentIir = NULL;
+     absorp* lastIir = NULL;
 
-    // Initialisation Calculs
-    onde* onde = malloc(sizeof(onde));
-    // On met la première valeur comme valeur par défaut.
-    absorp *data = generate_absorp(filename, 0);
-    currentFir = fir(cb_origine);
-    currentIir = iir(lastIir, currentFir, lastFir);
-    add_to_circular_buffer(cb_origine, data);
+     // Initialisation Calculs
+     onde* onde = malloc(sizeof(onde));
 
-    onde->Xmin = currentIir;
-    onde->Xmax = currentIir;
+     // Initialisation Envoi des données
+     oxy* myOxy = malloc(sizeof(oxy));
 
-    oxy* myOxy = malloc(sizeof(oxy));
+     //Ouverture du fichier
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printf("Erreur ouverture fichier (firTest)\n");
+        return 0;
+    }
 
-    for(int i = 1; i < 5000; i++){
-        /* Extraction */
-        absorp *data = generate_absorp(filename, i);
-
-        /* On garde en mémoire la dernière valeur */
-        lastFir = currentFir;
-        lastIir = currentIir;
-
-        /* Filtre */
+     while (fgets(fBuffer, sizeof(fBuffer), file)) {
+       // Extraction
+        absorp *data = generate_absorp(filename, ligne);
         add_to_circular_buffer(cb_origine, data);
+
+        // Filtrage
         currentFir = fir(cb_origine);
         currentIir = iir(lastIir, currentFir, lastFir);
 
-        /* Données retournées */
-
-        /* Calcuuuuuuuls */
-        if (maj_onde(onde, currentIir, lastIir) == 1) {
-            calculs(onde, myOxy);
-
-            affichage(*myOxy);
-
-            // Remise à zéro.
+        // Cas du premier élément
+        if(ligne == 0) {
             onde->time = 0;
-            onde->Xmin = currentIir;
             onde->Xmax = currentIir;
+            onde->Xmin = currentIir;
         }
-//        print_onde(onde);§§ULL){
-//            printf("onde OK !\n");
-//            print_onde(onde);
-//        }
-    }
+        else {
+            if (maj_onde(onde, currentIir, lastIir) == 1) {
+               // Calculs
+                calculs(onde, myOxy);
 
-    /* expérimentation des firtest et irrtest */
-    /* Log1 */
-//    firTest("assets/FichiersLog/log1/log1.dat");
-//    iirTest("assets/FichiersLog/log1/log1_fir.dat");
-    /*Log2*/
-//    firTest("assets/FichiersLog/log2/log2.dat");
-//    iirTest("assets/FichiersLog/log2/log2_fir.dat");
+                // Remise à zéro.
+                onde->time = 0;
+                onde->Xmin = currentIir;
+                onde->Xmax = currentIir;
+            }
+        }
+        ligne++;
+        lastIir = currentIir;
+        lastFir = currentFir;
+     }
+     fclose(file);
     return 0;
 }

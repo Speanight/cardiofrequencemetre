@@ -7,8 +7,8 @@ include_directories(.)
 include_directories("assets/TestsAutomatiques")
 
 add_executable(cardiofrequencemetre
-        "assets/TestsAutomatiques/autotests.c"
-        "assets/TestsAutomatiques/autotests.h"
+        "autotests.c"
+        "autotests.h"
         affichage.c
         affichage.h
         define.h
