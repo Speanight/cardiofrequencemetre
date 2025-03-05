@@ -10,9 +10,8 @@ LIBS=-lm
 _DEPS = define.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main_sim.o
+_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main_sim.o autotests.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

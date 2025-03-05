@@ -11,65 +11,76 @@
 #include "fir.h"
 #include "iir.h"
 #include "mesure.h"
-
+#include "autotests.h"
 
 int main() {
-    char* filename = "assets/FichiersLog/log1/log1.dat";
+    // 0/1 | 1/1 |> 50%
+    testBlocAffichage();
 
-    // Initialisation Extraction
-    circular_buffer* cb_origine = generate_circular_buffer(50);
+    // 100%
+//    testBlocFIR();
 
-    // Initialisation Filtrage
-    absorp* currentFir = NULL;
-    absorp* lastFir= NULL;
+//    testBlocIIR();
 
-    absorp* currentIir = NULL;
-    absorp* lastIir = NULL;
+    // 0%
+//    testBlocMesure();
 
-    // Initialisation Calculs
-    onde* onde = malloc(sizeof(onde));
-    // On met la première valeur comme valeur par défaut.
-    absorp *data = generate_absorp(filename, 0);
-    currentFir = fir(cb_origine);
-    currentIir = iir(lastIir, currentFir, lastFir);
-    add_to_circular_buffer(cb_origine, data);
-
-    onde->Xmin = currentIir;
-    onde->Xmax = currentIir;
-
-    oxy* myOxy = malloc(sizeof(oxy));
-
-    for(int i = 1; i < 5000; i++){
-        /* Extraction */
-        absorp *data = generate_absorp(filename, i);
-
-        /* On garde en mémoire la dernière valeur */
-        lastFir = currentFir;
-        lastIir = currentIir;
-
-        /* Filtre */
-        add_to_circular_buffer(cb_origine, data);
-        currentFir = fir(cb_origine);
-        currentIir = iir(lastIir, currentFir, lastFir);
-
-        /* Données retournées */
-
-        /* Calcuuuuuuuls */
-        if (maj_onde(onde, currentIir, lastIir) == 1) {
-            calculs(onde, myOxy);
-
-            affichage(*myOxy);
-
-            // Remise à zéro.
-            onde->time = 0;
-            onde->Xmin = currentIir;
-            onde->Xmax = currentIir;
-        }
-//        print_onde(onde);§§ULL){
-//            printf("onde OK !\n");
-//            print_onde(onde);
+//    char* filename = "assets/FichiersLog/log2/log2.dat";
+//
+//    // Initialisation Extraction
+//    circular_buffer* cb_origine = generate_circular_buffer(50);
+//
+//    // Initialisation Filtrage
+//    absorp* currentFir = NULL;
+//    absorp* lastFir= NULL;
+//
+//    absorp* currentIir = NULL;
+//    absorp* lastIir = NULL;
+//
+//    // Initialisation Calculs
+//    onde* onde = malloc(sizeof(onde));
+//    // On met la première valeur comme valeur par défaut.
+//    absorp *data = generate_absorp(filename, 0);
+//    currentFir = fir(cb_origine);
+//    currentIir = iir(lastIir, currentFir, lastFir);
+//    add_to_circular_buffer(cb_origine, data);
+//
+//    onde->Xmin = currentIir;
+//    onde->Xmax = currentIir;
+//
+//    oxy* myOxy = malloc(sizeof(oxy));
+//
+//    for(int i = 1; i < 5000; i++){
+//        /* Extraction */
+//        absorp *data = generate_absorp(filename, i);
+//
+//        /* On garde en mémoire la dernière valeur */
+//        lastFir = currentFir;
+//        lastIir = currentIir;
+//
+//        /* Filtre */
+//        add_to_circular_buffer(cb_origine, data);
+//        currentFir = fir(cb_origine);
+//        currentIir = iir(lastIir, currentFir, lastFir);
+//
+//        /* Données retournées */
+//
+//        /* Calcuuuuuuuls */
+//        if (maj_onde(onde, currentIir, lastIir) == 1) {
+//            calculs(onde, myOxy);
+//
+//            affichage(*myOxy);
+//
+//            // Remise à zéro.
+//            onde->time = 0;
+//            onde->Xmin = currentIir;
+//            onde->Xmax = currentIir;
 //        }
-    }
+////        print_onde(onde);§§ULL){
+////            printf("onde OK !\n");
+////            print_onde(onde);
+////        }
+//    }
 
     /* expérimentation des firtest et irrtest */
     /* Log1 */
