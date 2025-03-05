@@ -14,8 +14,6 @@
 
 
 int main() {
-    printf("Conteeeeeent\n");
-
     char* filename = "assets/FichiersLog/log2/log2.dat";
 
     // Initialisation Extraction
@@ -39,8 +37,7 @@ int main() {
     onde->Xmin = currentIir;
     onde->Xmax = currentIir;
 
-    int spo2 = 0;            //Valeur qui seras écrite dans le .data
-    int bpm = 0;             //Valeur qui seras écrite dans le .data
+    oxy* myOxy = malloc(sizeof(oxy));
 
     for(int i = 1; i < 5000; i++){
         /* Extraction */
@@ -59,7 +56,9 @@ int main() {
 
         /* Calcuuuuuuuls */
         if (maj_onde(onde, currentIir, lastIir) == 1) {
-            calculs(onde, &spo2, &bpm);
+            calculs(onde, myOxy);
+
+            affichage(*myOxy);
 
             // Remise à zéro.
             onde->time = 0;

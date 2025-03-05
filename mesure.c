@@ -63,7 +63,7 @@ void print_onde(onde* onde){
 
 }
 
-void calculs(onde* onde, int* spo2, int* bpm){
+void calculs(onde* onde, oxy* myOxy){
   /*
 	Objesctifs :
 		+> effectuer les calculs et les insérer dans les 'int*' associé
@@ -96,8 +96,8 @@ void calculs(onde* onde, int* spo2, int* bpm){
     printf("SPO2 : %d\nBPM : %d\n", ret_spo2, ret_bpm);
 
     /* Ajout dans les int* */
-    *spo2 = ret_spo2;
-    *bpm = ret_bpm;
+    myOxy->spo2 = ret_spo2;
+    myOxy->pouls = ret_bpm;
 }
 
 int calcul_SPO2(float ratio){
