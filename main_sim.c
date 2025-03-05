@@ -16,7 +16,7 @@
 int main() {
     printf("Conteeeeeent\n");
 
-    char* filename = "assets/FichiersLog/log1/log1.dat";
+    char* filename = "assets/FichiersLog/log2/log2.dat";
 
     // Initialisation Extraction
     circular_buffer* cb_origine = generate_circular_buffer(50);
@@ -55,7 +55,7 @@ int main() {
         currentFir = fir(cb_origine);
         currentIir = iir(lastIir, currentFir, lastFir);
 
-        /* Données retournées] */
+        /* Données retournées */
 
         /* Calcuuuuuuuls */
         if (maj_onde(onde, currentIir, lastIir) == 1) {

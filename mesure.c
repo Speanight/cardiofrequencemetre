@@ -80,7 +80,7 @@ void calculs(onde* onde, int* spo2, int* bpm){
 	float ptpACR = onde->Xmax->acr - onde->Xmin->acr;
 	float ptpACIR = onde->Xmax->acir - onde->Xmin->acir;
 
-    /* Valeur non spécifiques pour DCR et DCIR donc on peut prendre c'elle que l'ont veut*/
+//    Valeur non spécifiques pour DCR et DCIR donc on peut prendre c'elle que l'ont veut
     float ptpDCR = onde->Xmax->dcr;
 	float ptpDCIR = onde->Xmax->dcir;
 //    printf("PTP ACR : %f \nPTP ACIR : %f\n", ptpACR, ptpACIR);
@@ -101,6 +101,14 @@ void calculs(onde* onde, int* spo2, int* bpm){
 }
 
 int calcul_SPO2(float ratio){
+  /*
+	Objectifs :
+		+> émuler la fonction spo2(ratio) pour avoir les bons % correspondant au ratio
+	Entrée :
+		+> ratio 	=> RSIR calculé précédement
+	Sortie :
+		+> SPO2		=> le spo2 déduit
+   */
 	if(ratio<1){
 		return 100-(ratio-0.4)*25;
     }
