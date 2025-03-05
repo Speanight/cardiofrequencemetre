@@ -24,4 +24,5 @@ add_executable(cardiofrequencemetre
         test.c
         main_sim.c
         define.h
+        autotests.c
 )

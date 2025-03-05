@@ -1,4 +1,3 @@
-
 #include "define.h"
 #include "fichiers.h"
 #include "autotests.h"
@@ -6,7 +5,6 @@
 #include "iir.h"
 #include "fir.h"
 #include "mesure.h"
-
 #include <stdio.h>
 
 #define FIR_TEST_COUNT 4

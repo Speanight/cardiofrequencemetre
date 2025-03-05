@@ -27,7 +27,9 @@ absorp lireFichier(FILE* pf, int* etat){
 void finFichier(FILE* pf){
     fclose(pf);
 
+
 }
+
 
 absorp* generate_absorp(const char *filename, int n) {
   /*
