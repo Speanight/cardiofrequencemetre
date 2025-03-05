@@ -1,5 +1,6 @@
 #include "iir.h"
 #include "define.h"
+#include "fichiers.h"
 #include <stdlib.h>
 
 absorp iirTest(char* filename){
@@ -52,7 +53,7 @@ absorp iirTest(char* filename){
             	currentIir->acir = currentFir->acir - lastFir->acir;
             	currentIir->dcir = currentFir->dcir;
 			}
-          	print_absorp(currentIir);
+//          	print_absorp(currentIir);
         }
 
         free(lastIir);
@@ -102,7 +103,7 @@ absorp* iir(absorp* lastIir, absorp* currentFir, absorp* lastFir){
     else{
           currentIir = currentFir;
 	}
-    print_absorp(currentIir);
+
 
     return currentIir;
 }

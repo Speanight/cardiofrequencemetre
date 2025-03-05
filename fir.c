@@ -1,4 +1,5 @@
 #include "fir.h"
+#include "fichiers.h"
 
 float FIR_TAPS[51]={
         1.4774946e-019,
