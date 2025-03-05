@@ -2,11 +2,6 @@
 #include "define.h"
 
 void affichage(oxy myOxy){
-    // (On ajoute 11 pour ".verrouData".)
-//    char* verrouPath = malloc(strlen(AFFICHAGE_PATH) + 1 + 11);
-//    char* dataPath = malloc(strlen(AFFICHAGE_PATH) + 1 + 8);
-
-
     char* verrouPath = "assets/IHMPython/.verrouData";
     char* dataPath = "assets/IHMPython/data.txt";
 
@@ -28,6 +23,7 @@ void affichage(oxy myOxy){
     fprintf(data, "%d\n%d", myOxy.spo2, myOxy.pouls);
 
     // On supprime le verrou pour autoriser la lecture des données.
+    fclose(data);
     remove(verrouPath);
 }
 

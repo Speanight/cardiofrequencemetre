@@ -24,16 +24,7 @@ int maj_onde(onde* onde, absorp* currentIir, absorp* lastIir){
         onde->Xmin = currentIir;
     }
 
-    if (lastIir->acr < 0 && currentIir->acr > 0) {
-        printf("Passage à une autre onde !\n");
-        print_absorp(onde->Xmin);
-        print_absorp(onde->Xmax);
-        printf("Temps : %d\n", onde->time);
-        printf("|---------------------|\n");
-
-        return 1;
-    }
-    return 0;
+    return lastIir->acr < 0 && currentIir->acr > 0;
 }
 
 void print_onde(onde* onde){

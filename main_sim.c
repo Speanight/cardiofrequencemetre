@@ -14,7 +14,7 @@
 
 
 int main() {
-    char* filename = "assets/FichiersLog/log2/log2.dat";
+    char* filename = "assets/FichiersLog/log1/log1.dat";
 
     // Initialisation Extraction
     circular_buffer* cb_origine = generate_circular_buffer(50);
