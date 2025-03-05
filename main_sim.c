@@ -1,7 +1,3 @@
-//
-// Created by OMGiT on 03/03/2025.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -61,6 +57,7 @@ int main() {
             if (maj_onde(onde, currentIir, lastIir) == 1) {
                // Calculs
                 calculs(onde, myOxy);
+                affichage(*myOxy);
 
                 // Remise à zéro.
                 onde->time = 0;

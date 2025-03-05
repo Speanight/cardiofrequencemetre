@@ -25,4 +25,7 @@ add_executable(cardiofrequencemetre
         main_sim.c
         define.h
         autotests.c
+        lecture.c
+        lecture.h
+        main_usb.c
 )
