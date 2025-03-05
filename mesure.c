@@ -74,23 +74,26 @@ void calculs(onde* onde, int* spo2, int* bpm){
 		+> Bpm		=> un pointeur pour pouvoir utiliser en dehors de la fonctions les données calculées
    */
 
-  	printf("Lol j'en ai aucune idée de ce que je dois calculer !!\n");
 	/* Calucls*/
 
   	/* Calculs SPO2 */
 	float ptpACR = onde->Xmax->acr - onde->Xmin->acr;
 	float ptpACIR = onde->Xmax->acir - onde->Xmin->acir;
+
     /* Valeur non spécifiques pour DCR et DCIR donc on peut prendre c'elle que l'ont veut*/
     float ptpDCR = onde->Xmax->dcr;
 	float ptpDCIR = onde->Xmax->dcir;
-    printf("PTP ACR : %f \n, PTP ACIR : %f\n", ptpACR, ptpACIR);
+//    printf("PTP ACR : %f \nPTP ACIR : %f\n", ptpACR, ptpACIR);
     float RsIr = (ptpACR/ptpDCR) / (ptpACIR/ptpDCIR);
     int ret_spo2 = calcul_SPO2(RsIr);
 
     /* Calculs BPM */
     // On considère que l'ont prend une donnée toutes les 2ms
-    int time = (onde->time)*0.02;
+    int time = (onde->time)*2;
     int ret_bpm = 60000/time;
+
+    /* Affichage des bpm et spo2 */
+    printf("SPO2 : %d\nBPM : %d\n", ret_spo2, ret_bpm);
 
     /* Ajout dans les int* */
     *spo2 = ret_spo2;
