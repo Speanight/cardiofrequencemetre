@@ -30,13 +30,25 @@ int main() {
 
     // Initialisation Calculs
     onde* onde = malloc(sizeof(onde));
-//    onde->end = NULL;
-    int* spo2;            //Valeur qui seras écrite dans le .data
-    int* bpm;             //Valeur qui seras écrite dans le .data
+    // On met la première valeur comme valeur par défaut.
+    absorp *data = generate_absorp(filename, 0);
+    currentFir = fir(cb_origine);
+    currentIir = iir(lastIir, currentFir, lastFir);
+    add_to_circular_buffer(cb_origine, data);
 
-    for(int i = 0; i < 5000; i++){
+    onde->Xmin = currentIir;
+    onde->Xmax = currentIir;
+
+    int spo2 = 0;            //Valeur qui seras écrite dans le .data
+    int bpm = 0;             //Valeur qui seras écrite dans le .data
+
+    for(int i = 1; i < 5000; i++){
         /* Extraction */
         absorp *data = generate_absorp(filename, i);
+
+        /* On garde en mémoire la dernière valeur */
+        lastFir = currentFir;
+        lastIir = currentIir;
 
         /* Filtre */
         add_to_circular_buffer(cb_origine, data);
@@ -44,21 +56,20 @@ int main() {
         currentIir = iir(lastIir, currentFir, lastFir);
 
         /* Données retournées] */
-//        print_absorp(currentFir);
-        print_absorp(currentIir);
 
         /* Calcuuuuuuuls */
-        maj_onde(onde, currentIir, lastIir);
+        if (maj_onde(onde, currentIir, lastIir) == 1) {
+            calculs(onde, &spo2, &bpm);
+
+            // Remise à zéro.
+            onde->time = 0;
+            onde->Xmin = currentIir;
+            onde->Xmax = currentIir;
+        }
 //        print_onde(onde);§§ULL){
 //            printf("onde OK !\n");
 //            print_onde(onde);
-//            calculs(onde, spo2, bpm);
 //        }
-
-        /* Envoi des données */
-
-        lastIir = currentIir;
-        lastFir = currentFir;
     }
 
     /* expérimentation des firtest et irrtest */

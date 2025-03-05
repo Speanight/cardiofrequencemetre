@@ -4,11 +4,10 @@
 typedef struct {
   absorp* Xmax;
   absorp* Xmin;
-  absorp* start;
-  absorp* end;
+  int time;
 } onde;
 
-void maj_onde(onde* onde, absorp* current, absorp* pred);
+int maj_onde(onde* onde, absorp* currentIir, absorp* lastIir);
 
 void print_onde(onde* onde);
 
