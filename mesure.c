@@ -63,7 +63,7 @@ void print_onde(onde* onde){
 
 }
 
-void calculs(onde* onde, int* spo2, int* bpm){
+void calculs(onde* onde, oxy* myOxy){
   /*
 	Objesctifs :
 		+> effectuer les calculs et les insérer dans les 'int*' associé
@@ -74,7 +74,6 @@ void calculs(onde* onde, int* spo2, int* bpm){
 		+> Bpm		=> un pointeur pour pouvoir utiliser en dehors de la fonctions les données calculées
    */
 
-  	printf("Lol j'en ai aucune idée de ce que je dois calculer !!\n");
 	/* Calucls*/
 
   	/* Calculs SPO2 */
@@ -89,12 +88,12 @@ void calculs(onde* onde, int* spo2, int* bpm){
 
     /* Calculs BPM */
     // On considère que l'ont prend une donnée toutes les 2ms
-    int time = (onde->time)*0.02;
+    int time = (onde->time)*2;
     int ret_bpm = 60000/time;
 
     /* Ajout dans les int* */
-    *spo2 = ret_spo2;
-    *bpm = ret_bpm;
+    myOxy->spo2 = ret_spo2;
+    myOxy->pouls = ret_bpm;
 }
 
 int calcul_SPO2(float ratio){
