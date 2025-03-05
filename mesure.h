@@ -4,13 +4,14 @@
 typedef struct {
   absorp* Xmax;
   absorp* Xmin;
-  absorp* start;
-  absorp* end;
+  int time;
 } onde;
 
 void maj_onde(onde* onde, absorp* current, absorp* pred);
 
 void print_onde(onde* onde);
+
+int calcul_SPO2(float ratio);
 
 void calculs(onde* onde, int* spo2, int* bpm);
 
