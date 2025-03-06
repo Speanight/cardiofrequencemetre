@@ -64,9 +64,19 @@ absorp iirTest(char* filename){
 //          	print_absorp(currentIir);
 
 	}
-    myAbsorp = *currentIir;
+
+    // On copie les attributs un à un pour éviter fuites de mémoire.
+    myAbsorp.acir = currentIir->acir;
+    myAbsorp.acr = currentIir->acr;
+    myAbsorp.dcir = currentIir->dcir;
+    myAbsorp.dcr = currentIir->dcr;
 
     fclose(file);
+
+    free(currentFir);
+    free(currentIir);
+    free(lastFir);
+    free(lastIir);
 
 	return myAbsorp;
 }

@@ -38,7 +38,10 @@ int main() {
         return 0;
     }
 
-     while (fgets(fBuffer, sizeof(fBuffer), file)) {
+    // vVv Mieux
+//     while (fgets(fBuffer, sizeof(fBuffer), file)) {
+    for (int i = 0; i < 1000; i++) {
+        fgets(fBuffer, sizeof(fBuffer), file);
        // Extraction
         absorp *data = generate_absorp(filename, ligne);
         add_to_circular_buffer(cb_origine, data);
@@ -66,9 +69,24 @@ int main() {
             }
         }
         ligne++;
+
+        free(lastIir);
+        free(lastFir);
+
         lastIir = currentIir;
         lastFir = currentFir;
+
+        free(data);
      }
+
+    free(cb_origine);
+
+    free(lastIir);
+    free(lastFir);
+
      fclose(file);
+     free(onde);
+     free(myOxy);
+
     return 0;
 }

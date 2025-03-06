@@ -10,14 +10,14 @@ LIBS=-lm
 _DEPS = define.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o main_sim.o autotests.o
+_OBJ = affichage.o fichiers.o fir.o iir.o mesure.o autotests.o main_usb.o lecture.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 cardiofrequencemetre: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) -l ftd2xx
 
 .PHONY: clean
 .PHONY: run
@@ -30,4 +30,4 @@ run: cardiofrequencemetre
 	./cardiofrequencemetre
 
 valgrind: cardiofrequencemetre
-	valgrind --leak-check=full --track-origins=yes ./cardiofrequencemetre
+	valgrind --track-origins=yes ./cardiofrequencemetre
