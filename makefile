@@ -17,7 +17,7 @@ $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 cardiofrequencemetre: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) -l ftd2xx
 
 .PHONY: clean
 .PHONY: run
@@ -30,4 +30,4 @@ run: cardiofrequencemetre
 	./cardiofrequencemetre
 
 valgrind: cardiofrequencemetre
-	valgrind --leak-check=full --track-origins=yes ./cardiofrequencemetre
+	valgrind --track-origins=yes ./cardiofrequencemetre

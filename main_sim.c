@@ -68,13 +68,28 @@ int main() {
             }
         }
         ligne++;
+
+        free(lastIir);
+        free(lastFir);
+
         lastIir = currentIir;
         lastFir = currentFir;
+
+        free(data);
      }
+
+    free(cb_origine);
+
+    free(lastIir);
+    free(lastFir);
+
      fclose(file);
 
   char* bits = "1000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000";
   print_absorp(create_absorp_from_bits(bits));
 
-  return 0;
+     free(onde);
+     free(myOxy);
+
+    return 0;
 }
