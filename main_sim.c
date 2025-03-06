@@ -8,8 +8,10 @@
 #include "iir.h"
 #include "mesure.h"
 #include "autotests.h"
+#include "lecture.h"
 
 int main() {
+
      //Initialisation fichier source
      char* filename = "assets/FichiersLog/log1/log1.dat";
 
@@ -70,5 +72,9 @@ int main() {
         lastFir = currentFir;
      }
      fclose(file);
-    return 0;
+
+  char* bits = "1000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000";
+  print_absorp(create_absorp_from_bits(bits));
+
+  return 0;
 }
