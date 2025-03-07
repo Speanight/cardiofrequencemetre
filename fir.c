@@ -58,8 +58,13 @@ float FIR_TAPS[51]={
 };
 
 
-// A faire sur acr et acir.
-// TODO: Trouver le leak de 8 bytes dans 1 block.
+/**
+ * Permet le test de l'application du filtre fir : celui-ci a pour objectif d'éliminer les hautes fréquences grâce au
+ * tableau de float FIR_TAPS. Le filtre est appliqué sur l'ensemble du fichier, avant de retourner la dernière valeur.
+ *
+ * @param filename Contient le path vers le fichier à ouvrir.
+ * @return Renvoie la dernière donnée récupérée dans le fichier après application du filtre dans une structure absorp.
+ */
 absorp firTest(char* filename){
   /*
 	Filtre toutes les données du fichier associé et renvoie la dernière valeur filtrée
@@ -88,8 +93,6 @@ absorp firTest(char* filename){
         absorp* valAbsorp = fir(buffer);
         myAbsorp = *valAbsorp;
         // Pour satisfaire valgrind et les fuites de mémoire :
-
-        // print_absorp(valAbsorp);
         free(valAbsorp);
     }
 
@@ -102,32 +105,36 @@ absorp firTest(char* filename){
 	return myAbsorp;
 }
 
+/**
+ * Permet l'exécution du filtre fir avec les valeurs données dans la constante FIR_TAPS en ajoutant les valeurs jusqu'à
+ * obtention du résultat final, stocké dans une variable "data" qui est un pointeur de la structure absorp.
+ *
+ * @param buffer Buffer circulaire vide, endroit où seront stockés les valeurs de manière cyclique.
+ * @return Valeur finale après application du filtre, stocké dans un pointeur d'absorp. Besoin de free cette valeur !
+ */
 absorp* fir(circular_buffer* buffer) {
-  /*
-	Transforme les données de la structure d'entrée (filtre)
-   */
+    // Initialisation d'une valeur absorp.
+    absorp* data = malloc(sizeof(absorp));
 
-  // Initialisation d'une valeur absorp.
-  absorp* data = malloc(sizeof(data));
-  // On récupère le dernier élément...
+    // On récupère le dernier élément...
     int lastElem = buffer->current - 1;
     if (lastElem == -1) { // Si c'était le premier, alors on prend le dernier.
         lastElem = buffer->size - 1;
     }
 
-  data->acir = 0;
-  data->acr = 0;
-  // dcir et dcr n'étant pas modifiées, elles sont donc égales à la dernière valeur.
-  data->dcir = buffer->array[lastElem].dcir;
-  data->dcr = buffer->array[lastElem].dcr;
+    data->acir = 0;
+    data->acr = 0;
+    // dcir et dcr n'étant pas modifiées, elles sont donc égales à la dernière valeur.
+    data->dcir = buffer->array[lastElem].dcir;
+    data->dcr = buffer->array[lastElem].dcr;
 
-  // Boucle ("intégrale" du calcul)
-  for (int i = 0; i < buffer->size; i++) {
-      // Ajout de chacune des valeurs (via boucle for) à acir et acr.
-      data->acir += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acir;
-      data->acr += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acr;
-  }
+    // Boucle ("intégrale" du calcul)
+    for (int i = 0; i < buffer->size; i++) {
+        // Ajout de chacune des valeurs (via boucle for) à acir et acr de data.
+        data->acir += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acir;
+        data->acr += FIR_TAPS[50-i] * buffer->array[(lastElem+i)%buffer->size].acr;
+    }
 
-  return data;
+    return data;
 }
 

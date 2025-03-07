@@ -11,25 +11,23 @@
 #include "lecture.h"
 
 int main() {
-    /*
+     //Initialisation fichier source
+     char* filename = "assets/FichiersLog/log1/log1.dat";
 
-    //Initialisation fichier source
-    char* filename = "assets/FichiersLog/log1/log1.dat";
+     //Initialisation Extraction
+     char fBuffer[256];
+     int ligne = 0;
+     circular_buffer* cb_origine = generate_circular_buffer(50);
 
-    //Initialisation Extraction
-    char fBuffer[256];
-    int ligne = 0;
-    circular_buffer* cb_origine = generate_circular_buffer(50);
+     // Initialisation Filtrage
+     absorp* currentFir;
+     absorp* lastFir= malloc(sizeof(absorp));
 
-    // Initialisation Filtrage
-    absorp* currentFir = malloc(sizeof(absorp));
-    absorp* lastFir= malloc(sizeof(absorp));
+     absorp* currentIir;
+     absorp* lastIir = malloc(sizeof(absorp));
 
-    absorp* currentIir = malloc(sizeof(absorp));
-    absorp* lastIir = malloc(sizeof(absorp));
-
-    // Initialisation Calculs
-    onde* onde = malloc(sizeof(onde));
+     // Initialisation Calculs
+     onde* myOnde = malloc(sizeof(onde));
 
     // Initialisation Envoi des données
     oxy* myOxy = malloc(sizeof(oxy));
@@ -40,9 +38,6 @@ int main() {
         printf("Erreur ouverture fichier (firTest)\n");
         return 0;
     }
-
-    //Ligne de test pour les 500 premières valeurs
-    // for(int i=0; i < 500; i++) {
 
     while (fgets(fBuffer, sizeof(fBuffer), file)) {
         // Extraction
@@ -55,25 +50,25 @@ int main() {
 
         // Cas du premier élément
         if(ligne == 0) {
-            onde->time = 0;
-            onde->Xmax = currentIir;
-            onde->Xmin = currentIir;
+            myOnde->time = 0;
+            myOnde->Xmax = currentIir;
+            myOnde->Xmin = currentIir;
         }
         else {
-            if (maj_onde(onde, currentIir, lastIir) == 1) {
-                // Calculs
-                calculs(onde, myOxy);
+            if (maj_onde(myOnde, currentIir, lastIir) == 1) {
+               // Calculs
+                calculs(myOnde, myOxy);
                 affichage(*myOxy);
 
                 // Remise à zéro.
-                onde->time = 0;
-                onde->Xmin = currentIir;
-                onde->Xmax = currentIir;
+                myOnde->time = 0;
+                myOnde->Xmin = currentIir;
+                myOnde->Xmax = currentIir;
             }
         }
         ligne++;
 
-        // free(lastIir);
+        free(lastIir);
         free(lastFir);
 
         lastIir = currentIir;
@@ -86,16 +81,15 @@ int main() {
 
     free(lastIir);
     free(lastFir);
-
+    free(myOnde);
     fclose(file);
-     free(onde);
-     free(myOxy);
-    */
+    free(myOxy);
 
     // Zone de tests
-    testBlocFIR();
-    testBlocIIR();
-    testBlocMesure();
-    testBlocAffichage();
+//    testBlocFIR();
+//    testBlocIIR();
+//    testBlocMesure();
+//    testBlocAffichage();
+
     return 0;
 }
