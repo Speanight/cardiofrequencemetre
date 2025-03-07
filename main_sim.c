@@ -11,7 +11,6 @@
 #include "lecture.h"
 
 int main() {
-
      //Initialisation fichier source
      char* filename = "assets/FichiersLog/log1/log1.dat";
 
@@ -21,14 +20,14 @@ int main() {
      circular_buffer* cb_origine = generate_circular_buffer(50);
 
      // Initialisation Filtrage
-     absorp* currentFir = malloc(sizeof(absorp));
+     absorp* currentFir;
      absorp* lastFir= malloc(sizeof(absorp));
 
-     absorp* currentIir = malloc(sizeof(absorp));
+     absorp* currentIir;
      absorp* lastIir = malloc(sizeof(absorp));
 
      // Initialisation Calculs
-     onde* onde = malloc(sizeof(onde));
+     onde* myOnde = malloc(sizeof(onde));
 
      // Initialisation Envoi des données
      oxy* myOxy = malloc(sizeof(oxy));
@@ -40,7 +39,6 @@ int main() {
         return 0;
     }
 
-    // for(int i=0; i < 500; i++) {
      while (fgets(fBuffer, sizeof(fBuffer), file)) {
        // Extraction
         absorp *data = generate_absorp(filename, ligne);
@@ -52,25 +50,25 @@ int main() {
 
         // Cas du premier élément
         if(ligne == 0) {
-            onde->time = 0;
-            onde->Xmax = currentIir;
-            onde->Xmin = currentIir;
+            myOnde->time = 0;
+            myOnde->Xmax = currentIir;
+            myOnde->Xmin = currentIir;
         }
         else {
-            if (maj_onde(onde, currentIir, lastIir) == 1) {
+            if (maj_onde(myOnde, currentIir, lastIir) == 1) {
                // Calculs
-                calculs(onde, myOxy);
+                calculs(myOnde, myOxy);
                 affichage(*myOxy);
 
                 // Remise à zéro.
-                onde->time = 0;
-                onde->Xmin = currentIir;
-                onde->Xmax = currentIir;
+                myOnde->time = 0;
+                myOnde->Xmin = currentIir;
+                myOnde->Xmax = currentIir;
             }
         }
         ligne++;
 
-        // free(lastIir);
+        free(lastIir);
         free(lastFir);
 
         lastIir = currentIir;
@@ -83,6 +81,7 @@ int main() {
 
     free(lastIir);
     free(lastFir);
+    free(myOnde);
 
      fclose(file);
 
@@ -91,7 +90,7 @@ int main() {
 //     print_absorp(absorp_bit);
 //     free(absorp_bit);
 
-     free(onde);
+     free(myOnde);
      free(myOxy);
     return 0;
 }

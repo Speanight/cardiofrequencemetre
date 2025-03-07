@@ -30,4 +30,5 @@ add_executable(cardiofrequencemetre
         main_usb.c
         main_usb.c
         main_sim.c
+        main_usb.c
 )

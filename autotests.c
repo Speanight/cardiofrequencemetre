@@ -45,7 +45,7 @@ void testBlocAffichage(){
 	if (access(".verrouData", F_OK ) == 0) remove(".verrouData");
 
 	affichage(mes);
-	pf = fopen("data.txt","r");
+	pf = fopen("assets/IHMPython/data.txt","r");
 	if(pf == NULL){
 		mark[mark_index++] = 0.0;
 		printAutoTestsResults("Affichage", mark,coeff, AFF_TEST_COUNT);

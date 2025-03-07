@@ -110,6 +110,7 @@ int calcul_SPO2(float ratio){
 
 }
 
+
 oxy mesureTest(char* filename){
 	oxy myOxy;
 
@@ -121,37 +122,43 @@ oxy mesureTest(char* filename){
 
 	char fBuffer[256];
 
-	absorp* lastIir = NULL;
+	absorp* lastIir = malloc(sizeof(absorp));
 
-	onde* onde = malloc(sizeof(onde));
+	onde* myOnde = malloc(sizeof(onde));
 	oxy* tempOxy = malloc(sizeof(oxy));
 
     bool first_turn = true;
 
-	while (fgets(fBuffer, sizeof(fBuffer), file)) {
-		absorp* currentIir = malloc(sizeof(absorp));
-		if(first_turn){
-          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
+    while (fgets(fBuffer, sizeof(fBuffer), file)) {
+        absorp* currentIir = malloc(sizeof(absorp));
+        if(first_turn){
+            sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
 
-            onde->time = 0;
-            onde->Xmax = currentIir;
-            onde->Xmin = currentIir;
+            myOnde->time = 0;
+            myOnde->Xmax = currentIir;
+            myOnde->Xmin = currentIir;
             first_turn = false;
         }
         else {
-          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
+            sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
 
-          	if (maj_onde(onde, currentIir, lastIir) == 1) {
-				calculs(onde, tempOxy);
-				// Remise à zéro.
-          		onde->time = 0;
-          		onde->Xmin = currentIir;
-          		onde->Xmax = currentIir;
-          	}
-		}
+            if (maj_onde(myOnde, currentIir, lastIir) == 1) {
+                calculs(myOnde, tempOxy);
+                // Remise à zéro.
+                myOnde->time = 0;
+                myOnde->Xmin = currentIir;
+                myOnde->Xmax = currentIir;
+            }
+        }
         lastIir = currentIir;
-
     }
-	myOxy = *tempOxy;
+
+    myOxy.spo2 = tempOxy->spo2;
+    myOxy.pouls = tempOxy->pouls;
+
+    free(lastIir);
+    free(myOnde);
+    free(tempOxy);
+
 	return myOxy;
 }

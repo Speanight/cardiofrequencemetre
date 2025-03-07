@@ -2,6 +2,12 @@
 #include "fichiers.h"
 #include "define.h"
 
+/**
+ * Fonction permettant l'ouverture d'un fichier.
+ *
+ * @param nomFichier Contient le path vers le fichier.
+ * @return Objet "fichier" ouvert.
+ */
 FILE* initFichier(char* nomFichier ){
 
     FILE* pf=fopen(nomFichier,"r");
@@ -12,6 +18,13 @@ FILE* initFichier(char* nomFichier ){
     return pf;
 }
 
+/**
+ * Permet de lire les données d'un fichier sous le format acr,dcr,acir,dcir.
+ *
+ * @param pf Fichier à lire
+ * @param etat Pointeur de int, contenant le return du fscanf.
+ * @return Structure absorp contenant les valeurs à la ligne lue.
+ */
 absorp lireFichier(FILE* pf, int* etat){
     absorp myAbsorp;
     char x,y;
@@ -24,25 +37,31 @@ absorp lireFichier(FILE* pf, int* etat){
     return myAbsorp;
 }
 
+/**
+ * Ferme un fichier.
+ *
+ * @param pf Fichier à fermer.
+ */
 void finFichier(FILE* pf){
     fclose(pf);
 }
 
-
+/**
+ * Permet de générer la structure absorp à partir du numéro de la ligne d'un fichier source.
+ *
+ * @param filename Path du fichier contenant les données
+ * @param n Numéro de ligne à lire
+ * @return Pointeur d'une structure absorp, contenant les valeurs lues selon les paramètres passés. Valeur à free !
+ */
 absorp* generate_absorp(const char *filename, int n) {
-  /*
-    Objectif     +> générer la structure absorp a partir du numéro de la ligne d'un fichier source
-    *filename    +> nom du fichier contenant les données
-    n            +> numéro de ligne
-   */
-  /* Ouverture du fichier et gestion erreur s'il n'apparait pas*/
-
+    // Ouverture du fichier.
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("Erreur ouverture fichier");
         return NULL;
     }
-    /* Allocation de la mémoire pour la structure */
+
+    // Allocation de la mémoire pour la structure
     absorp *data = malloc(sizeof(absorp));
     if (!data) {
         printf("Erreur allocation mémoire");
@@ -53,30 +72,30 @@ absorp* generate_absorp(const char *filename, int n) {
     char buffer[256];
     int current_line = 0;
 
-    /* Récupération des infos contenues dans la fichier a la bonne ligne*/
+    // Récupération des infos contenues dans la fichier a la bonne ligne
     while (fgets(buffer, sizeof(buffer), file)) {
+        // Si on est à la bonne ligne...
         if (current_line == n) {
+            // Alors on récupère les données et on les place dans les valeurs de data.
             sscanf(buffer, "%f,%f,%f,%f", &data->acr, &data->dcr, &data->acir, &data->dcir);
             fclose(file);
+            // Puis on return data.
             return data;
         }
         current_line++;
     }
 
+    // Sinon, on free le tout et on renvoie null.
     fclose(file);
-    free(data);
-    return NULL; // Ligne non trouvée
+    return NULL;
 }
 
+/**
+ * Permet d'afficher absorp dans la console pour des raisons de débuggage.
+ *
+ * @param absorp Abosrp à lire.
+ */
 void print_absorp(absorp *absorp) {
-  /*
-    Objectif :
-        +> afficher le absorp
-    Entrée :
-        +> absorp     =>un absorp
-    Sortie :
-        +> affichage du absorp
-   */
     printf("Absorp :  acr = %.2f, dcr = %.2f, acir = %.2f, dcir = %.2f\n",
         absorp->acr,
         absorp->dcr,
@@ -86,17 +105,13 @@ void print_absorp(absorp *absorp) {
 }
 
 /* =========================Circular Buffer========================= */
-
+/**
+ * Permet de créer un buffer circulaire de la taille spécifiée (doit être inférieure à 50 en accord avec la structure !)
+ *
+ * @param size Taille du buffer à créer.
+ * @return Buffer généré. Renvoie NULL en cas d'erreur. Besoin de free la valeur !
+ */
 circular_buffer* generate_circular_buffer(int size) {
-  /*
-    Objectif :
-        +> créer un buffer
-    Entrée :
-        +> size  => le nombre d'éléments du buffer (maximum)
-    Sortie :
-        +> crée un buffer de ka bonne taille et initialise le début a 0
-        +> NULL si erreur
-*/
     circular_buffer* buffer = malloc(sizeof(circular_buffer));
 
     buffer->size = size;
@@ -105,34 +120,33 @@ circular_buffer* generate_circular_buffer(int size) {
     return buffer;
 }
 
+/**
+ * Permet d'ajouter une structure absorp à la bonne place dans un buffer circulaire.
+ *
+ * @param cb Pointeur au buffer dans lequel ajouter la valeur
+ * @param data Valeur à ajouter.
+ */
 void add_to_circular_buffer(circular_buffer* cb, absorp* data) {
-  /*
-    Objectif     +> ajouter dans le buffer une structure absorp
-    Entrée :
-        +> cb    => circular_buffer
-        +> data  => absorp
-    Sortie :
-        +> ajout de data dans le cb
-   */
+    // Si on est à la fin du buffer...
     if (cb->current == cb->size){
+        // ALors on revient au début pour boucler.
         cb->current = 0;
     }
+    // Ensuite, on ajoute la valeur dans le buffer.
     cb->array[cb->current] = *data;
     cb->current++;
 }
 
+/**
+ * Permet de lire les données contenues dans un buffer à un index spécifié. Plus l'index est grand, plus on cherchera
+ * une valeur ancienne. (On ne prend pas en compte la modification de l'index dynamique, mais seulement la position
+ * relative avec la "tête" de la structure)
+ *
+ * @param cb Buffer circulaire à observer.
+ * @param index Index à regarder.
+ * @return Renvoie un pointeur à l'absorp obtenu, NULL en cas d'erreur d'index.
+ */
 absorp* read_from_circular_buffer(circular_buffer* cb, int index) {
-  /*
-    Objectif :
-        +> lire les données contenues dans le buffer grâce a un index
-        +> plus l'index est grand plus il vas chercher dans les données sauvegardé précédement
-    Entrée :
-        +> cb     => buffer contenant les structure
-        +> index  => index qui indique la "profondeur" de la recherche
-    Sortie :
-        +> absorp* => les datas voulues
-        +> NULL    => si erreur index
-   */
   if (index >= cb->size-1){
     printf("Erreur : index plus grand que la taille");
     return NULL;
@@ -146,15 +160,12 @@ absorp* read_from_circular_buffer(circular_buffer* cb, int index) {
   }
 }
 
+/**
+ * Permet d'afficher le contenu d'un buffer dans la console pour du débuggage.
+ *
+ * @param cb Buffer à lir .
+ */
 void print_buffer(circular_buffer* cb) {
-  /*
-    Objectif :
-        +> afficher le contenu du buffer
-    Entrée :
-        +> cb     => le Buffer
-    Sortie :
-        +> affichage ...
-   */
   printf("affichage du buffer de size : %d\n",cb->size);
   for (int i = 0; i < cb->size; i++){
     print_absorp(&(cb->array[i]));
