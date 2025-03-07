@@ -1,5 +1,5 @@
 #include "fir.h"
-#include "fichiers.h"
+#include "define.h"
 #include "mesure.h"
 #include <stdio.h>
 

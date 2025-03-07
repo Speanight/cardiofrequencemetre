@@ -21,7 +21,6 @@ add_executable(cardiofrequencemetre
         main_sim.c
         mesure.c
         mesure.h
-        test.c
         main_sim.c
         define.h
         autotests.c
@@ -31,4 +30,5 @@ add_executable(cardiofrequencemetre
         main_usb.c
         main_sim.c
         main_usb.c
+        define.c
 )
