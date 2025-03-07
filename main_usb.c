@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <ftd2xx.h>
+#include <ftd2xx.h>
 #include <unistd.h>
 #include "define.h"
 #include "lecture.h"
@@ -80,10 +80,10 @@ int main() {
         }
     }
 
-//    // Configuration de la liaison série
-//    FT_SetBaudRate(handle, 9600);
-//    FT_SetDataCharacteristics(handle, FT_BITS_8, FT_STOP_BITS_1, FT_PARITY_NONE);
-//    FT_SetFlowControl(handle, FT_FLOW_NONE, 0, 0);
+    // Configuration de la liaison série
+    FT_SetBaudRate(handle, 9600);
+    FT_SetDataCharacteristics(handle, FT_BITS_8, FT_STOP_BITS_1, FT_PARITY_NONE);
+    FT_SetFlowControl(handle, FT_FLOW_NONE, 0, 0);
 
 
     circular_buffer* cb_origine = generate_circular_buffer(50);

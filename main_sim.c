@@ -11,9 +11,14 @@
 #include "lecture.h"
 
 int main() {
-    /*
+    // Zone de tests
+//    testBlocFIR();
+//    testBlocIIR();
+//    testBlocMesure();
+//    testBlocAffichage();
+
      //Initialisation fichier source
-     char* filename = "assets/FichiersLog/log1/log1.dat";
+     char* filename = "log2.dat";
 
      //Initialisation Extraction
      char fBuffer[256];
@@ -85,12 +90,6 @@ int main() {
     free(myOnde);
     fclose(file);
     free(myOxy);
-*/
-    // Zone de tests
-    testBlocFIR();
-    testBlocIIR();
-    testBlocMesure();
-    testBlocAffichage();
 
     return 0;
 }
