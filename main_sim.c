@@ -21,11 +21,11 @@ int main() {
      circular_buffer* cb_origine = generate_circular_buffer(50);
 
      // Initialisation Filtrage
-     absorp* currentFir = NULL;
-     absorp* lastFir= NULL;
+     absorp* currentFir = malloc(sizeof(absorp));
+     absorp* lastFir= malloc(sizeof(absorp));
 
-     absorp* currentIir = NULL;
-     absorp* lastIir = NULL;
+     absorp* currentIir = malloc(sizeof(absorp));
+     absorp* lastIir = malloc(sizeof(absorp));
 
      // Initialisation Calculs
      onde* onde = malloc(sizeof(onde));
@@ -40,6 +40,7 @@ int main() {
         return 0;
     }
 
+    // for(int i=0; i < 500; i++) {
      while (fgets(fBuffer, sizeof(fBuffer), file)) {
        // Extraction
         absorp *data = generate_absorp(filename, ligne);
@@ -69,14 +70,14 @@ int main() {
         }
         ligne++;
 
-        free(lastIir);
+        // free(lastIir);
         free(lastFir);
 
         lastIir = currentIir;
         lastFir = currentFir;
 
         free(data);
-     }
+    }
 
     free(cb_origine);
 
@@ -85,11 +86,12 @@ int main() {
 
      fclose(file);
 
-  char* bits = "1000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000";
-  print_absorp(create_absorp_from_bits(bits));
+//     char* bits = "1000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000";
+//     absorp* absorp_bit = create_absorp_from_bits(bits);
+//     print_absorp(absorp_bit);
+//     free(absorp_bit);
 
      free(onde);
      free(myOxy);
-
     return 0;
 }

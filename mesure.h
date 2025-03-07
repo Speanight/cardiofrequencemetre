@@ -1,11 +1,6 @@
 #include "define.h"
 #include "fichiers.h"
 
-typedef struct {
-  absorp* Xmax;
-  absorp* Xmin;
-  int time;
-} onde;
 
 int maj_onde(onde* onde, absorp* currentIir, absorp* lastIir);
 

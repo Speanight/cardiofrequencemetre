@@ -1,5 +1,7 @@
 #include "fir.h"
 #include "fichiers.h"
+#include "mesure.h"
+#include <stdio.h>
 
 float FIR_TAPS[51]={
         1.4774946e-019,
@@ -76,16 +78,18 @@ absorp firTest(char* filename){
     buffer->size = 50;
     buffer->current = 0;
 
-    absorp *data = malloc(sizeof(data));
+    absorp* data = malloc(sizeof(data));
+
     while (fgets(fBuffer, sizeof(fBuffer), file)) {
         sscanf(fBuffer, "%f,%f,%f,%f", &data->acr, &data->dcr, &data->acir, &data->dcir);
-        buffer->array[buffer->current] = *data;
-        buffer->current = (buffer->current+1)%buffer->size;
+        add_to_circular_buffer(buffer,data);
         current_line++;
 
         absorp* valAbsorp = fir(buffer);
         myAbsorp = *valAbsorp;
         // Pour satisfaire valgrind et les fuites de mémoire :
+
+        // print_absorp(valAbsorp);
         free(valAbsorp);
     }
 

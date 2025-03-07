@@ -35,4 +35,19 @@ typedef struct{
 		int pouls;  /*!< Pouls */
 	} oxy;
 
+
+/* Struct circular buffer */
+typedef struct {
+    int current;
+    int size;
+    absorp array[50];
+} circular_buffer;
+
+/* Struct onde */
+typedef struct {
+  absorp* Xmax;
+  absorp* Xmin;
+  int time;
+} onde;
+
 #endif // DEFINE_H

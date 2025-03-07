@@ -61,6 +61,7 @@ absorp iirTest(char* filename){
         currentIir->dcr = currentFir->dcr;
         currentIir->acir = currentFir->acir - lastFir->acir + alpha * lastIir->acir;
         currentIir->dcir = currentFir->dcir;
+
 //          	print_absorp(currentIir);
 
 	}
@@ -114,7 +115,6 @@ absorp* iir(absorp* lastIir, absorp* currentFir, absorp* lastFir){
     else{
           currentIir = currentFir;
 	}
-
 
     return currentIir;
 }
