@@ -12,28 +12,28 @@
 
 int main() {
 
-     //Initialisation fichier source
-     char* filename = "assets/FichiersLog/log1/log1.dat";
+    //Initialisation fichier source
+    char* filename = "assets/FichiersLog/log1/log1.dat";
 
-     //Initialisation Extraction
-     char fBuffer[256];
-     int ligne = 0;
-     circular_buffer* cb_origine = generate_circular_buffer(50);
+    //Initialisation Extraction
+    char fBuffer[256];
+    int ligne = 0;
+    circular_buffer* cb_origine = generate_circular_buffer(50);
 
-     // Initialisation Filtrage
-     absorp* currentFir = malloc(sizeof(absorp));
-     absorp* lastFir= malloc(sizeof(absorp));
+    // Initialisation Filtrage
+    absorp* currentFir = malloc(sizeof(absorp));
+    absorp* lastFir= malloc(sizeof(absorp));
 
-     absorp* currentIir = malloc(sizeof(absorp));
-     absorp* lastIir = malloc(sizeof(absorp));
+    absorp* currentIir = malloc(sizeof(absorp));
+    absorp* lastIir = malloc(sizeof(absorp));
 
-     // Initialisation Calculs
-     onde* onde = malloc(sizeof(onde));
+    // Initialisation Calculs
+    onde* onde = malloc(sizeof(onde));
 
-     // Initialisation Envoi des données
-     oxy* myOxy = malloc(sizeof(oxy));
+    // Initialisation Envoi des données
+    oxy* myOxy = malloc(sizeof(oxy));
 
-     //Ouverture du fichier
+    //Ouverture du fichier
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("Erreur ouverture fichier (firTest)\n");
@@ -41,8 +41,8 @@ int main() {
     }
 
     // for(int i=0; i < 500; i++) {
-     while (fgets(fBuffer, sizeof(fBuffer), file)) {
-       // Extraction
+    while (fgets(fBuffer, sizeof(fBuffer), file)) {
+        // Extraction
         absorp *data = generate_absorp(filename, ligne);
         add_to_circular_buffer(cb_origine, data);
 
@@ -58,7 +58,7 @@ int main() {
         }
         else {
             if (maj_onde(onde, currentIir, lastIir) == 1) {
-               // Calculs
+                // Calculs
                 calculs(onde, myOxy);
                 affichage(*myOxy);
 
@@ -84,14 +84,9 @@ int main() {
     free(lastIir);
     free(lastFir);
 
-     fclose(file);
-
-//     char* bits = "1000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000100000000000000000000000001000010000000000000000000000000100001000000000000000000000000010000";
-//     absorp* absorp_bit = create_absorp_from_bits(bits);
-//     print_absorp(absorp_bit);
-//     free(absorp_bit);
-
+    fclose(file);
      free(onde);
      free(myOxy);
+
     return 0;
 }

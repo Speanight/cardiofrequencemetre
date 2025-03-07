@@ -2,41 +2,38 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-
+/**
+* Objectif :+> Indiquer les valeurs de l'onde pour pouvoir facilement faire des mesures dessus
+ * @param onde			=> l'onde actuelle que l'ont veut définire
+ * @param currentIir	=> le point actuel (serviras a trouver les moment pour lequel l'onde 'coupe' l'axe des abisces)
+ * @param lastIir		=> le point précédent (serviras a trouver le moment pour lequel l'onde coupe l'axe des absicces)
+ *
+ * @return				+> mise a jour des infos de l'onde
+ *						+> Le int vaut 0 en général, et 1 en cas de passage à une autre onde. (passage vals. - à +)
+ */
 int maj_onde(onde* onde, absorp* currentIir, absorp* lastIir){
- /*
-   Objectif :
-   		+> Indiquer les valeurs de l'onde pour pouvoir facilement faire des mesures dessus
-   Entrée :
-   		+> onde 		=> l'onde actuelle que l'ont veut définire
-   		+> current		=> le point actuel (serviras a trouver les moment pour lequel l'onde 'coupe' l'axe des abisces)
-   		+> pred			=> le point précédent (serviras a trouver le moment pour lequel l'onde coupe l'axe des absicces)
-   Sortie :
-   		+> mise a jour des infos de l'onde
-   		+> Le int vaut 0 en général, et 1 en cas de passage à une autre onde. (passage vals. - à +)
-  */
-
+	//On ajoute le 2ms a la durée de l'onde
     onde->time++;
+
+	// On vérifie si le point de l'onde actuel est plus élevé que le point enregistré (on change si oui)
     if (currentIir->acr > onde->Xmax->acr || currentIir->acir > onde->Xmax->acir) {
         onde->Xmax = currentIir;
     }
 
+	// On vérifie si le point de l'onde actuel est plus bas que le point enregistré (on change si oui)
     if (currentIir->acr < onde->Xmin->acr || currentIir->acir < onde->Xmin->acir) {
         onde->Xmin = currentIir;
     }
 
+	//On vérifie si l'onde traverse l'axe des abcisses pour envoyer un signa dans le cas ou l'onde est terminée
     return lastIir->acr < 0 && currentIir->acr > 0;
 }
 
+/**
+* Objectif :+> Afficher les caractéristiques de l'onde
+ * @param onde
+ */
 void print_onde(onde* onde){
-  /*
-	Objectif :
-		+> Afficher les caractéristiques de l'onde
-	Entrée :
-		+> onde
-	Sortie :
-		+> données de l'onde textuellement
-   */
   	printf("Onde :\n");
 
   	printf("Xmax :");
@@ -45,30 +42,21 @@ void print_onde(onde* onde){
 	printf("Xmin:");
 	print_absorp(onde->Xmin);
 
-//	printf("Start:");
-//	print_absorp(onde->start);
-//
-//	if(onde->end != NULL){
-//    	printf("End:");
-//	    print_absorp(onde->end);
-//	}
-
+	printf("Durée : %dms\n", (onde->time)*2);
 }
 
-void calculs(onde* onde, oxy* myOxy){
-  /*
-	Objesctifs :
+/**
+* Objectifs :
 		+> effectuer les calculs et les insérer dans les 'int*' associé
 		+> préparer l'onde pour recommencer
-	Entrée :
-		+> onde 	=> caractéristiques de l'ondes
-		+> spo2 	=> un pointeur pour pouvoir utiliser en dehors de la fonctions les données calculées
-		+> Bpm		=> un pointeur pour pouvoir utiliser en dehors de la fonctions les données calculées
-   */
-
+ * @param onde		=> caractéristiques de l'ondes
+ * @param myOxy		=> contient les résultats des calculs pour les envoyer en dehors de la fonction
+ */
+void calculs(onde* onde, oxy* myOxy){
 	/* Calucls*/
 
   	/* Calculs SPO2 */
+	// calcul des valeur crète a crète
 	float ptpACR = onde->Xmax->acr - onde->Xmin->acr;
 	float ptpACIR = onde->Xmax->acir - onde->Xmin->acir;
 
@@ -87,20 +75,17 @@ void calculs(onde* onde, oxy* myOxy){
     /* Affichage des bpm et spo2 */
     printf("SPO2 : %d\nBPM : %d\n", ret_spo2, ret_bpm);
 
-    /* Ajout dans les int* */
+    /* Ajout dans la structure Oxy* */
     myOxy->spo2 = ret_spo2;
     myOxy->pouls = ret_bpm;
 }
 
+/**
+* Objectifs :+> émuler la fonction spo2(ratio) pour avoir les bons % correspondant au ratio
+ * @param ratio		=> RSIR calculé dans la fonction 'calcul'
+ * @return			=> le spo2 déduit
+ */
 int calcul_SPO2(float ratio){
-  /*
-	Objectifs :
-		+> émuler la fonction spo2(ratio) pour avoir les bons % correspondant au ratio
-	Entrée :
-		+> ratio 	=> RSIR calculé précédement
-	Sortie :
-		+> SPO2		=> le spo2 déduit
-   */
 	if(ratio<1){
 		return 100-(ratio-0.4)*25;
     }
@@ -110,9 +95,15 @@ int calcul_SPO2(float ratio){
 
 }
 
+/**
+ * Objectif : éffectuer des test directement depuis un fichier pour vérifier le fonctionnement de mesure et qui renvoie les dernier résultats
+ * @param filename		+> le nomb du fichier contenant les valeurs a tester
+ * @return				+> le dernier Oxy calculé (les dernier BPM et SPO2)
+ */
 oxy mesureTest(char* filename){
 	oxy myOxy;
 
+	// Ouverture du fichier
 	FILE *file = fopen(filename, "r");
 	if (!file) {
 		printf("Erreur ouverture fichier (firTest)\n");
@@ -120,37 +111,36 @@ oxy mesureTest(char* filename){
 	}
 
 	char fBuffer[256];
-
 	absorp* lastIir = NULL;
 
+	// On crée l'onde et le Oxy qui contiendras les valeurs précédentes
 	onde* onde = malloc(sizeof(onde));
 	oxy* tempOxy = malloc(sizeof(oxy));
 
+	// Nous permet de ne pas éxecuter la première occurence (nous avons besoin d'au minimum deux valeurs pour faire nos calculs d'onde)
     bool first_turn = true;
 
 	while (fgets(fBuffer, sizeof(fBuffer), file)) {
 		absorp* currentIir = malloc(sizeof(absorp));
+		sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
 		if(first_turn){
-          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
-
+			// Dans le cas de la première valeur on définis notre onde en fonction d'elle
             onde->time = 0;
             onde->Xmax = currentIir;
             onde->Xmin = currentIir;
             first_turn = false;
         }
         else {
-          	sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
-
+        	// on met a jour les paramètres de l'onde et on vérifie si l'onde est terminée
           	if (maj_onde(onde, currentIir, lastIir) == 1) {
 				calculs(onde, tempOxy);
-				// Remise à zéro.
+				// Remise à zéro de l'onde
           		onde->time = 0;
           		onde->Xmin = currentIir;
           		onde->Xmax = currentIir;
           	}
 		}
         lastIir = currentIir;
-
     }
 	myOxy = *tempOxy;
 	return myOxy;

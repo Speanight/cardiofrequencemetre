@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ftd2xx.h>
+// #include <ftd2xx.h>
 #include <unistd.h>
 #include "define.h"
 #include "lecture.h"
