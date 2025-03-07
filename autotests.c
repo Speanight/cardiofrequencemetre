@@ -1,4 +1,4 @@
-#include "define.h"
+ #include "define.h"
 #include "fichiers.h"
 #include "autotests.h"
 #include "affichage.h"
@@ -42,10 +42,10 @@ void testBlocAffichage(){
 	mes.spo2  = 80;
 	mes.pouls = 120;
 
-	if (access(".verrouData", F_OK ) == 0) remove(".verrouData");
+	if (access("assets/IHMPython/.verrouData", F_OK ) == 0) remove(".verrouData");
 
 	affichage(mes);
-	pf = fopen("data.txt","r");
+	pf = fopen("assets/IHMPython/data.txt","r");
 	if(pf == NULL){
 		mark[mark_index++] = 0.0;
 		printAutoTestsResults("Affichage", mark,coeff, AFF_TEST_COUNT);
@@ -176,10 +176,8 @@ void testBlocMesure(){
 	}
 
 	printAutoTestsResults("Mesure",mark,coeff,2);
-	/*printf("spo2=%d [ref=%d]\n",myOxy.spo2,myOxyRef.spo2);
-	printf("pouls=%d [ref=%d]\n",myOxy.pouls,myOxyRef.pouls);*/
-	
-
+	// printf("spo2=%d [ref=%d]\n",myOxy.spo2,myOxyRef.spo2);
+	// printf("pouls=%d [ref=%d]\n",myOxy.pouls,myOxyRef.pouls);
 }
 
 void testBlocIIR(){

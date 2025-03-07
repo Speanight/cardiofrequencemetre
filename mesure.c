@@ -61,19 +61,22 @@ void calculs(onde* onde, oxy* myOxy){
 	float ptpACIR = onde->Xmax->acir - onde->Xmin->acir;
 
 //    Valeur non spécifiques pour DCR et DCIR donc on peut prendre c'elle que l'ont veut
-    float ptpDCR = onde->Xmax->dcr;
-	float ptpDCIR = onde->Xmax->dcir;
+    float DCR = onde->Xmax->dcr;
+	float DCIR = onde->Xmax->dcir;
 //    printf("PTP ACR : %f \nPTP ACIR : %f\n", ptpACR, ptpACIR);
-    float RsIr = (ptpACR/ptpDCR) / (ptpACIR/ptpDCIR);
+    float RsIr = (ptpACR/DCR) / (ptpACIR/DCIR);
+	// printf("RsIr : %f\n", RsIr);
+
     int ret_spo2 = calcul_SPO2(RsIr);
 
     /* Calculs BPM */
     // On considère que l'ont prend une donnée toutes les 2ms
-    int time = (onde->time)*2;
-    int ret_bpm = 60000/time;
+    const int time = (onde->time)*2;
+    const int ret_bpm = 60000/time;
 
     /* Affichage des bpm et spo2 */
-    printf("SPO2 : %d\nBPM : %d\n", ret_spo2, ret_bpm);
+ //    printf("SPO2 : %d\nBPM : %d\n", ret_spo2, ret_bpm);
+ //    printf("-------------->>>>>>>\n");
 
     /* Ajout dans la structure Oxy* */
     myOxy->spo2 = ret_spo2;
@@ -107,6 +110,9 @@ oxy mesureTest(char* filename){
 	FILE *file = fopen(filename, "r");
 	if (!file) {
 		printf("Erreur ouverture fichier (firTest)\n");
+		// Initialisation de valeurs par défaut
+		myOxy.pouls=0;
+		myOxy.spo2=0;
 		return myOxy;
 	}
 
@@ -114,7 +120,7 @@ oxy mesureTest(char* filename){
 	absorp* lastIir = NULL;
 
 	// On crée l'onde et le Oxy qui contiendras les valeurs précédentes
-	onde* onde = malloc(sizeof(onde));
+	onde* myonde = malloc(sizeof(onde));
 	oxy* tempOxy = malloc(sizeof(oxy));
 
 	// Nous permet de ne pas éxecuter la première occurence (nous avons besoin d'au minimum deux valeurs pour faire nos calculs d'onde)
@@ -125,19 +131,19 @@ oxy mesureTest(char* filename){
 		sscanf(fBuffer, "%f,%f,%f,%f", &currentIir->acr, &currentIir->dcr, &currentIir->acir, &currentIir->dcir);
 		if(first_turn){
 			// Dans le cas de la première valeur on définis notre onde en fonction d'elle
-            onde->time = 0;
-            onde->Xmax = currentIir;
-            onde->Xmin = currentIir;
+            myonde->time = 0;
+            myonde->Xmax = currentIir;
+            myonde->Xmin = currentIir;
             first_turn = false;
         }
         else {
         	// on met a jour les paramètres de l'onde et on vérifie si l'onde est terminée
-          	if (maj_onde(onde, currentIir, lastIir) == 1) {
-				calculs(onde, tempOxy);
+          	if (maj_onde(myonde, currentIir, lastIir) == 1) {
+				calculs(myonde, tempOxy);
 				// Remise à zéro de l'onde
-          		onde->time = 0;
-          		onde->Xmin = currentIir;
-          		onde->Xmax = currentIir;
+          		myonde->time = 0;
+          		myonde->Xmin = currentIir;
+          		myonde->Xmax = currentIir;
           	}
 		}
         lastIir = currentIir;

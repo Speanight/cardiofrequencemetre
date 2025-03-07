@@ -11,6 +11,7 @@
 #include "lecture.h"
 
 int main() {
+    /*
 
     //Initialisation fichier source
     char* filename = "assets/FichiersLog/log1/log1.dat";
@@ -40,7 +41,9 @@ int main() {
         return 0;
     }
 
+    //Ligne de test pour les 500 premières valeurs
     // for(int i=0; i < 500; i++) {
+
     while (fgets(fBuffer, sizeof(fBuffer), file)) {
         // Extraction
         absorp *data = generate_absorp(filename, ligne);
@@ -87,6 +90,12 @@ int main() {
     fclose(file);
      free(onde);
      free(myOxy);
+    */
 
+    // Zone de tests
+    testBlocFIR();
+    testBlocIIR();
+    testBlocMesure();
+    testBlocAffichage();
     return 0;
 }

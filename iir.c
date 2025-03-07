@@ -21,7 +21,7 @@ absorp iirTest(char* filename){
 		return myAbsorp;
 	}
 
-    printf("============== TEST IIR =============\n");
+    // printf("============== TEST IIR =============\n");
 
 	absorp* currentFir = malloc(sizeof(absorp));
 	absorp* lastFir = malloc(sizeof(absorp));
