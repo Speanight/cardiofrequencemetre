@@ -42,7 +42,7 @@ void print_onde(onde* onde){
 	printf("Xmin:");
 	print_absorp(onde->Xmin);
 
-	printf("Durée : %dms\n", (onde->time)*2);
+	printf("Durée : %d ms\n", (onde->time)*2);
 }
 
 /**

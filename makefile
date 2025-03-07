@@ -17,7 +17,7 @@ $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 cardiofrequencemetre: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) -l ftd2xx
 
 .PHONY: clean
 .PHONY: run

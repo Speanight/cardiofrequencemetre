@@ -2,7 +2,7 @@
 #include "define.h"
 
 /**
- * Permet l'envoi des données de myOxy dans un document situé à assets/IHMPython.
+ * Permet l'envoi des données de myOxy dans un document situé à la racine.
  * Si le fichier .verrouData existe, alors on ne modifiera pas le fichier pour éviter une écriture lors de la lecture
  * par le programme de front-end. Sinon, on génère un fichier .verrouData pour empêcher la lecture du fichier le temps
  * de l'écriture.
@@ -11,8 +11,8 @@
  */
 void affichage(oxy myOxy){
     // Initialisation des paths pour les fichiers.
-    char* verrouPath = "assets/IHMPython/.verrouData";
-    char* dataPath = "assets/IHMPython/data.txt";
+    char* verrouPath = ".verrouData";
+    char* dataPath = "data.txt";
 
     // On vérifie si .verrouData est présent.
     if (access(verrouPath, F_OK) != -1) {
